@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>YouTube RePlayer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="static/bootstrap.min.css" media="screen">
+</head>
+
+<body>
+    <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
+        <div class="container">
+            <a href="../" class="navbar-brand">YouTube RePlayer</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://goh-chunlin.github.io/" target="_blank">About Chun Lin</a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container" style="margin-top: 120px;">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">YouTube URL</span>
+                        <input id="txtVideoURL" type="text" class="form-control" onkeydown="if (event.keyCode == 13) document.getElementById('btnViewVideo').click();">
+                        <span class="input-group-btn">
+                            <button id="btnViewVideo" class="btn btn-primary" type="button" onclick="watchVideo();">Submit</button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="videoWrapper">
+                    <iframe id="ytplayer" width="730" height="445">
+                    </iframe>
+                </div>
+
+                <div style="margin-top: 10px; margin-bottom: 40px;">
+
+                    <form action="/addVideo" method="POST">
+                        <input id="hidVideoID" name="hidVideoID" type="hidden" />
+                        <input id="hidVideoName" name="hidVideoName" type="hidden" />
+
+                        <input id="btnAddToList" type="submit" class="btn btn-primary btn-lg" value="Add to List"
+                            disabled="disabled"></input>
+                    </form>
+
+                </div>
+            </div>
+            <div class="col-sm-4">
+
+
+                <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 500px;">
+                    <div id="storedVideosList" style="overflow: hidden; width: auto; height: 500px;">
+                        <div id="videoList" class="list-group">
+                            <span class="list-group-item active">My Videos</span>
+                            {{ range $videoId, $videoName := . }}
+                            <a href="javascript:;" class="list-group-item" onclick="watchVideoGeneral('{{ $videoId }}');">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td style="width: 94px;">
+                                                <img src="https://i.ytimg.com/vi/{{ $videoId }}/default.jpg" width="90px"
+                                                    title="{{ $videoName }}" alt="{{ $videoName }}">
+                                            </td>
+                                            <td valign="top">
+                                                <span style="font-weight: bold;">{{ $videoName }}</span>
+                                                <br />
+                                                <a href="javascript:;" onclick="event.stopPropagation(); updateVideoInfo('{{ $videoId }}', '{{ $videoName }}');">EDIT</a> | 
+                                                <a href="javascript:;" class="text-danger" onclick="event.stopPropagation(); deleteVideo('{{ $videoId }}', '{{ $videoName }}');">DELETE</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </a>
+                            {{ end }}
+                        </div>
+                    </div>
+                    <div class="slimScrollBar ui-draggable" style="background: rgb(0, 0, 0); width: 8px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 8px; z-index: 99; right: 1px; height: 500px;"></div>
+                    <div class="slimScrollRail" style="width: 8px; height: 100%; position: absolute; top: 0px; display: block; border-radius: 8px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form action="/updateVideo" method="POST">
+        <div id="modalUpdateVideoInfo" class="modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Video Info</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input id="modalUpdateVideoInfoVideoId" name="hidVideoID" type="hidden" />
+                        <div class="form-group row">
+                            <label for="modalUpdateVideoInfoName" class="col-sm-2 col-form-label">Title</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control-plaintext" id="modalUpdateVideoInfoName" name="VideoName" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form action="/deleteVideo" method="POST">
+        <div id="modalDeleteVideo" class="modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Video</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input id="modalDeleteVideoVideoId" name="hidVideoID" type="hidden" />
+                        <p class="text-danger">
+                            Are you sure you want to delete the video <strong id="modalDeleteVideoName"></strong>?
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script src="static/jquery.min.js"></script>
+    <script src="static/bootstrap.min.js"></script>
+    <script src="static/player.js"></script>
+</body>
+
+
+</html>
