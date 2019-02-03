@@ -16,19 +16,19 @@ steps:
   displayName: 'go get'
   inputs:
     arguments: '-d'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/Application'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
 
 - task: Go@0
   displayName: 'go build'
   inputs:
     command: build
     arguments: '-o "$(System.TeamProject).exe"'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/Application'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
 
 - task: ArchiveFiles@2
   displayName: 'Archive Files'
   inputs:
-    rootFolderOrFile: '$(Build.Repository.LocalPath)/Application'
+    rootFolderOrFile: '$(Build.Repository.LocalPath)'
     includeRootFolder: False
 
 - task: CopyFiles@2
