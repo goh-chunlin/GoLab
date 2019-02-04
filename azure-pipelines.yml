@@ -28,12 +28,6 @@ steps:
     arguments: '-o "$(System.TeamProject).exe"'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-- task: ArchiveFiles@2
-  displayName: 'Archive Files'
-  inputs:
-    rootFolderOrFile: '$(Build.Repository.LocalPath)'
-    includeRootFolder: False
-
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact'
   inputs:
