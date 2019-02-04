@@ -8,9 +8,12 @@ resources:
 
 pool:
   vmImage: 'vs2017-win2016'
+
 steps:
 - task: GoTool@0
-  displayName: 'Use Go 1.10'
+  inputs:
+    version: 1.11.5
+  displayName: 'Use Go 1.11.5'
 
 - task: Go@0
   displayName: 'go get'
