@@ -31,13 +31,9 @@ steps:
     rootFolderOrFile: '$(Build.Repository.LocalPath)'
     includeRootFolder: False
 
-- task: CopyFiles@2
-  displayName: 'Copy ARM templates'
-  inputs:
-    SourceFolder: ArmTemplates
-    TargetFolder: '$(build.artifactstagingdirectory)'
-
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact'
+  inputs:
+    artifactName: drop
 
 
