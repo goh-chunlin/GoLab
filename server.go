@@ -4,9 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 	"os"
-	"time"
 
-	"github.com/Microsoft/ApplicationInsights-Go/appinsights"
 	_ "github.com/lib/pq" // Create package-level variables and execute the init function of that package.
 )
 
@@ -21,14 +19,12 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	staticFiles := http.FileServer(http.Dir("public"))
+	mux.HandleFunc("/static/", handleRequestWithLog(staticFile))
 
-	mux.Handle("/static/", http.StripPrefix("/static/", staticFiles))
-
-	mux.HandleFunc("/", applicationInsightsLog(index))
-	mux.HandleFunc("/addVideo", applicationInsightsLog(addVideo))
-	mux.HandleFunc("/updateVideo", applicationInsightsLog(updateVideo))
-	mux.HandleFunc("/deleteVideo", applicationInsightsLog(deleteVideo))
+	mux.HandleFunc("/", handleRequestWithLog(index))
+	mux.HandleFunc("/addVideo", handleRequestWithLog(addVideo))
+	mux.HandleFunc("/updateVideo", handleRequestWithLog(updateVideo))
+	mux.HandleFunc("/deleteVideo", handleRequestWithLog(deleteVideo))
 
 	err = http.ListenAndServe(getPort(), mux)
 	checkError(err)
@@ -40,19 +36,4 @@ func getPort() string {
 		return ":" + p
 	}
 	return ":80"
-}
-
-func applicationInsightsLog(h func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
-	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
-		startTime := time.Now()
-		h(writer, request)
-		duration := time.Now().Sub(startTime)
-
-		client := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
-
-		trace := appinsights.NewRequestTelemetry(request.Method, request.URL.Path, duration, "200")
-		trace.Timestamp = time.Now()
-
-		client.Track(trace)
-	})
 }

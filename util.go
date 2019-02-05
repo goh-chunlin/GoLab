@@ -57,3 +57,18 @@ func generateHTML(writer http.ResponseWriter, data interface{}, filenames ...str
 	templates := template.Must(template.ParseFiles(files...))
 	templates.ExecuteTemplate(writer, "layout", data)
 }
+
+func handleRequestWithLog(h func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
+	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		startTime := time.Now()
+		h(writer, request)
+		duration := time.Now().Sub(startTime)
+
+		client := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
+
+		trace := appinsights.NewRequestTelemetry(request.Method, request.URL.Path, duration, "200")
+		trace.Timestamp = time.Now()
+
+		client.Track(trace)
+	})
+}
