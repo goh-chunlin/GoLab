@@ -25,10 +25,10 @@ func main() {
 
 	mux.Handle("/static/", http.StripPrefix("/static/", staticFiles))
 
-	mux.Handle("/", applicationInsightsLog(index))
-	mux.HandleFunc("/addVideo", addVideo)
-	mux.HandleFunc("/updateVideo", updateVideo)
-	mux.HandleFunc("/deleteVideo", deleteVideo)
+	mux.HandleFunc("/", applicationInsightsLog(index))
+	mux.HandleFunc("/addVideo", applicationInsightsLog(addVideo))
+	mux.HandleFunc("/updateVideo", applicationInsightsLog(updateVideo))
+	mux.HandleFunc("/deleteVideo", applicationInsightsLog(deleteVideo))
 
 	err = http.ListenAndServe(getPort(), mux)
 	checkError(err)
@@ -42,7 +42,7 @@ func getPort() string {
 	return ":80"
 }
 
-func applicationInsightsLog(h func(http.ResponseWriter, *http.Request)) http.Handler {
+func applicationInsightsLog(h func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		startTime := time.Now()
 		h(writer, request)
