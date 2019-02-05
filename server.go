@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/Microsoft/ApplicationInsights-Go/appinsights"
 
@@ -16,6 +17,11 @@ var client appinsights.TelemetryClient
 func main() {
 	var err error
 	client := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
+
+	trace := appinsights.NewTraceTelemetry("Testing", appinsights.Information)
+	trace.Timestamp = time.Now()
+
+	client.Track(trace)
 
 	// Initialize connection object.
 	db, err = sql.Open("postgres", os.Getenv("CONNECTION_STRING"))
