@@ -10,6 +10,8 @@ import (
 
 func checkError(err error) {
 	if err != nil {
+		// client := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
+
 		// trace := appinsights.NewTraceTelemetry(err.Error(), appinsights.Error)
 		// trace.Timestamp = time.Now()
 

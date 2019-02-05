@@ -3,22 +3,11 @@ package main
 import (
 	"database/sql"
 	"net/http"
-	"os"
 	"text/template"
-	"time"
-
-	"github.com/Microsoft/ApplicationInsights-Go/appinsights"
 )
 
 func index(writer http.ResponseWriter, request *http.Request) {
 	template, _ := template.ParseFiles("templates/index.html")
-
-	client := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
-
-	trace := appinsights.NewTraceTelemetry("Testing Index", appinsights.Information)
-	trace.Timestamp = time.Now()
-
-	client.Track(trace)
 
 	err := db.Ping()
 	checkError(err)
