@@ -18,6 +18,10 @@ func checkError(err error) {
 
 		client.Track(trace)
 
+		// false indicates that we should have this handle the panic, and
+		// not re-throw it.
+		defer appinsights.TrackPanic(client, false)
+
 		panic(err)
 	}
 }
