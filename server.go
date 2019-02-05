@@ -12,7 +12,6 @@ import (
 )
 
 var db *sql.DB
-var client appinsights.TelemetryClient
 
 func main() {
 	var err error
@@ -25,6 +24,12 @@ func main() {
 
 	// Initialize connection object.
 	db, err = sql.Open("postgres", os.Getenv("CONNECTION_STRING"))
+	if err != nil {
+		trace = appinsights.NewTraceTelemetry(err.Error(), appinsights.Error)
+		trace.Timestamp = time.Now()
+
+		client.Track(trace)
+	}
 	checkError(err)
 
 	mux := http.NewServeMux()

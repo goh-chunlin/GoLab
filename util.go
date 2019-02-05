@@ -6,21 +6,18 @@ import (
 	"os/exec"
 	"runtime"
 	"text/template"
-	"time"
-
-	"github.com/Microsoft/ApplicationInsights-Go/appinsights"
 )
 
 func checkError(err error) {
 	if err != nil {
-		trace := appinsights.NewTraceTelemetry(err.Error(), appinsights.Error)
-		trace.Timestamp = time.Now()
+		// trace := appinsights.NewTraceTelemetry(err.Error(), appinsights.Error)
+		// trace.Timestamp = time.Now()
 
-		client.Track(trace)
+		// client.Track(trace)
 
-		// false indicates that we should have this handle the panic, and
-		// not re-throw it.
-		defer appinsights.TrackPanic(client, false)
+		// // false indicates that we should have this handle the panic, and
+		// // not re-throw it.
+		// defer appinsights.TrackPanic(client, false)
 
 		panic(err)
 	}
