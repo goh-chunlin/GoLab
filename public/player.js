@@ -1,6 +1,6 @@
 function watchVideoGeneral(videoID) {
 
-        document.getElementById('ytplayer').src = "http://www.youtube.com/embed/" + videoID + "?autoplay=1&loop=1&playlist=" + videoID;
+        document.getElementById('ytplayer').src = "https://www.youtube.com/embed/" + videoID + "?autoplay=1&loop=1&playlist=" + videoID;
 
 }
 
