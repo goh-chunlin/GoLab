@@ -5,13 +5,17 @@ import (
 	"net/http"
 	"os"
 
-	_ "github.com/lib/pq"
+	"github.com/Microsoft/ApplicationInsights-Go/appinsights"
+
+	_ "github.com/lib/pq" // Create package-level variables and execute the init function of that package.
 )
 
 var db *sql.DB
+var client appinsights.TelemetryClient
 
 func main() {
 	var err error
+	client := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
 
 	// Initialize connection object.
 	db, err = sql.Open("postgres", os.Getenv("CONNECTION_STRING"))
@@ -30,6 +34,8 @@ func main() {
 
 	err = http.ListenAndServe(getPort(), mux)
 	checkError(err)
+
+	client.TrackEvent("Client connected")
 }
 
 func getPort() string {

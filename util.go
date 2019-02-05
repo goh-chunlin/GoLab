@@ -2,16 +2,22 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os/exec"
 	"runtime"
 	"text/template"
+	"time"
+
+	"github.com/Microsoft/ApplicationInsights-Go/appinsights"
 )
 
 func checkError(err error) {
 	if err != nil {
-		log.Fatal(err)
+		trace := appinsights.NewTraceTelemetry(err.Error(), appinsights.Error)
+		trace.Timestamp = time.Now()
+
+		client.Track(trace)
+
 		panic(err)
 	}
 }
