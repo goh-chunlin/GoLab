@@ -7,11 +7,12 @@ import (
 )
 
 func staticFile(writer http.ResponseWriter, request *http.Request) {
-	staticFiles := http.FileServer(http.Dir("public"))
-	http.StripPrefix("/static/", staticFiles)
+	urlComponents := strings.Split(request.URL.Path, "/")
 
-	urlComponents := strings.Split(request.URL.Path, ".")
-	fileExtension := urlComponents[len(urlComponents)-1]
+	http.ServeFile(writer, request, "public/"+urlComponents[len(urlComponents)-1])
+
+	fileComponents := strings.Split(urlComponents[len(urlComponents)-1], ".")
+	fileExtension := fileComponents[len(fileComponents)-1]
 
 	writer.Header().Set("Content-Type", mime.TypeByExtension(fileExtension))
 }
