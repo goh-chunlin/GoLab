@@ -37,6 +37,13 @@ function watchVideo() {
                                         $('#hidVideoName').val(videoTitle);
                                         $('#txtVideoURL').val('');
                                         $('#btnAddToList').attr("disabled", false);
+
+                                        $('#storedVideosList').slimScroll({
+                                                height: '500px',
+                                                size: '8px',
+                                                alwaysVisible: true,
+                                                railVisible: true
+                                        });
                                 }
                         )
                         .fail(

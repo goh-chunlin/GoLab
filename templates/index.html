@@ -66,34 +66,30 @@
             <div class="col-sm-4">
 
 
-                <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 500px;">
-                    <div id="storedVideosList" style="overflow: hidden; width: auto; height: 500px;">
-                        <div id="videoList" class="list-group">
-                            <span class="list-group-item active">My Videos</span>
-                            {{ range $videoId, $videoName := . }}
-                            <a href="javascript:;" class="list-group-item" onclick="watchVideoGeneral('{{ $videoId }}');">
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td style="width: 94px;">
-                                                <img src="https://i.ytimg.com/vi/{{ $videoId }}/default.jpg" width="90px"
-                                                    title="{{ $videoName }}" alt="{{ $videoName }}">
-                                            </td>
-                                            <td valign="top">
-                                                <span style="font-weight: bold;">{{ $videoName }}</span>
-                                                <br />
-                                                <a href="javascript:;" onclick="event.stopPropagation(); updateVideoInfo('{{ $videoId }}', '{{ $videoName }}');">EDIT</a> | 
-                                                <a href="javascript:;" class="text-danger" onclick="event.stopPropagation(); deleteVideo('{{ $videoId }}', '{{ $videoName }}');">DELETE</a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </a>
-                            {{ end }}
-                        </div>
+                <div id="storedVideosList">
+                    <div id="videoList" class="list-group">
+                        <span class="list-group-item active">My Videos</span>
+                        {{ range $videoId, $videoName := . }}
+                        <a href="javascript:;" class="list-group-item" onclick="watchVideoGeneral('{{ $videoId }}');">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 94px;">
+                                            <img src="https://i.ytimg.com/vi/{{ $videoId }}/default.jpg" width="90px"
+                                                title="{{ $videoName }}" alt="{{ $videoName }}">
+                                        </td>
+                                        <td valign="top">
+                                            <span style="font-weight: bold;">{{ $videoName }}</span>
+                                            <br />
+                                            <a href="javascript:;" onclick="event.stopPropagation(); updateVideoInfo('{{ $videoId }}', '{{ $videoName }}');">EDIT</a> | 
+                                            <a href="javascript:;" class="text-danger" onclick="event.stopPropagation(); deleteVideo('{{ $videoId }}', '{{ $videoName }}');">DELETE</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </a>
+                        {{ end }}
                     </div>
-                    <div class="slimScrollBar ui-draggable" style="background: rgb(0, 0, 0); width: 8px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 8px; z-index: 99; right: 1px; height: 500px;"></div>
-                    <div class="slimScrollRail" style="width: 8px; height: 100%; position: absolute; top: 0px; display: block; border-radius: 8px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div>
                 </div>
             </div>
         </div>
@@ -154,8 +150,23 @@
 
     <script src="static/jquery.min.js"></script>
     <script src="static/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
     <script src="static/slimScroll.min.js"></script>
     <script src="static/player.js"></script>
+
+    <script>
+    $(function() {
+        $('#storedVideosList').slimScroll(
+            {
+                height: '500px',
+                size: '8px',
+                alwaysVisible: true,
+                railVisible: true
+            }
+        );
+    });
+    </script>
 </body>
 
 
