@@ -1,6 +1,7 @@
 package main
 
 import (
+	"GoLab/models"
 	"database/sql"
 	"net/http"
 	"os"
@@ -17,6 +18,8 @@ func main() {
 	db, err = sql.Open("postgres", os.Getenv("CONNECTION_STRING"))
 	checkError(err)
 
+	models.Init()
+
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/static/", handleRequestWithLog(staticFile))
@@ -25,6 +28,8 @@ func main() {
 	mux.HandleFunc("/addVideo", handleRequestWithLog(addVideo))
 	mux.HandleFunc("/updateVideo", handleRequestWithLog(updateVideo))
 	mux.HandleFunc("/deleteVideo", handleRequestWithLog(deleteVideo))
+
+	mux.HandleFunc("/api/video/", handleRequestWithLog(handleVideoAPIRequests))
 
 	err = http.ListenAndServe(getPort(), mux)
 	checkError(err)

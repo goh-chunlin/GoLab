@@ -1,51 +1,27 @@
 package main
 
 import (
-	"database/sql"
+	"GoLab/models"
+	"encoding/json"
+	"mime"
 	"net/http"
-	"text/template"
 )
 
 func index(writer http.ResponseWriter, request *http.Request) {
-	template, _ := template.ParseFiles("templates/index.html")
+	http.ServeFile(writer, request, "templates/index.html")
 
-	err := db.Ping()
+	writer.Header().Set("Content-Type", mime.TypeByExtension("html"))
+}
+
+func indexWithJSON(writer http.ResponseWriter, request *http.Request) {
+	video, err := models.GetVideo(8)
 	checkError(err)
 
-	if err != nil {
-		template.Execute(writer, "Cannot connect to the database")
-	} else {
-		// Read data from table.
-		var id int
-		var name string
-		var url string
+	output, err := json.MarshalIndent(&video, "", "\t\t")
+	checkError(err)
 
-		sqlStatement := "SELECT * FROM videos;"
+	writer.Header().Set("Content-Type", "application/json")
+	writer.Write(output)
 
-		rows, err := db.Query(sqlStatement)
-		checkError(err)
-
-		defer rows.Close()
-
-		videos := make(map[string]string)
-
-		for rows.Next() {
-			switch err := rows.Scan(&id, &name, &url); err {
-			case sql.ErrNoRows:
-
-				template.Execute(writer, "No data were returned")
-
-			case nil:
-
-				videos[url[32:len(url)]] = name
-
-			default:
-
-				checkError(err)
-
-			}
-		}
-
-		template.Execute(writer, videos)
-	}
+	return
 }

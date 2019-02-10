@@ -53,13 +53,11 @@
 
                 <div style="margin-top: 10px; margin-bottom: 40px;">
 
-                    <form action="/addVideo" method="POST">
-                        <input id="hidVideoID" name="hidVideoID" type="hidden" />
-                        <input id="hidVideoName" name="hidVideoName" type="hidden" />
+                    <input id="hidVideoID" name="hidVideoID" type="hidden" />
+                    <input id="hidVideoName" name="hidVideoName" type="hidden" />
 
-                        <input id="btnAddToList" type="submit" class="btn btn-primary btn-lg" value="Add to List"
-                            disabled="disabled"></input>
-                    </form>
+                    <input id="btnAddToList" type="button" class="btn btn-primary btn-lg" value="Add to List" disabled="disabled"
+                        onclick="addVideo();" />
 
                 </div>
             </div>
@@ -69,103 +67,101 @@
                 <div id="storedVideosList">
                     <div id="videoList" class="list-group">
                         <span class="list-group-item active">My Videos</span>
-                        {{ range $videoId, $videoName := . }}
-                        <a href="javascript:;" class="list-group-item" onclick="watchVideoGeneral('{{ $videoId }}');">
+                        <a v-for="video in videos" href="javascript:;" class="list-group-item" v-on:click="watchVideoGeneral(video.youtubeVideoId);">
                             <table>
                                 <tbody>
                                     <tr>
                                         <td style="width: 94px;">
-                                            <img src="https://i.ytimg.com/vi/{{ $videoId }}/default.jpg" width="90px"
-                                                title="{{ $videoName }}" alt="{{ $videoName }}">
+                                            <img v-bind:src="'https://i.ytimg.com/vi/' + video.youtubeVideoId + '/default.jpg'"
+                                                width="90px" v-bind:title="video.videoTitle" v-bind:alt="video.videoTitle" />
                                         </td>
                                         <td valign="top">
-                                            <span style="font-weight: bold;">{{ $videoName }}</span>
+                                            <span style="font-weight: bold;">{{ video.videoTitle }}</span>
                                             <br />
-                                            <a href="javascript:;" onclick="event.stopPropagation(); updateVideoInfo('{{ $videoId }}', '{{ $videoName }}');">EDIT</a> | 
-                                            <a href="javascript:;" class="text-danger" onclick="event.stopPropagation(); deleteVideo('{{ $videoId }}', '{{ $videoName }}');">DELETE</a>
+                                            <a href="javascript:;" v-on:click="event.stopPropagation(); showUpdateVideoInfoPopup(video.id, video.videoTitle);">EDIT</a>
+                                            |
+                                            <a href="javascript:;" class="text-danger" v-on:click="event.stopPropagation(); showDeleteVideoPopup(video.id, video.videoTitle);">DELETE</a>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </a>
-                        {{ end }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <form action="/updateVideo" method="POST">
-        <div id="modalUpdateVideoInfo" class="modal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Update Video Info</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <input id="modalUpdateVideoInfoVideoId" name="hidVideoID" type="hidden" />
-                        <div class="form-group row">
-                            <label for="modalUpdateVideoInfoName" class="col-sm-2 col-form-label">Title</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control-plaintext" id="modalUpdateVideoInfoName" name="VideoName" />
-                            </div>
+    <div id="modalUpdateVideoInfo" class="modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Video Info</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input id="modalUpdateVideoInfoVideoId" name="hidVideoID" type="hidden" />
+                    <div class="form-group row">
+                        <label for="modalUpdateVideoInfoName" class="col-sm-2 col-form-label">Title</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control-plaintext" id="modalUpdateVideoInfoName" name="VideoName" />
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="updateVideo();">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
 
-    <form action="/deleteVideo" method="POST">
-        <div id="modalDeleteVideo" class="modal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Delete Video</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <input id="modalDeleteVideoVideoId" name="hidVideoID" type="hidden" />
-                        <p class="text-danger">
-                            Are you sure that you want to delete the video <strong id="modalDeleteVideoName"></strong>?
-                        </p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
+    <div id="modalDeleteVideo" class="modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Video</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input id="modalDeleteVideoVideoId" name="hidVideoID" type="hidden" />
+                    <p class="text-danger">
+                        Are you sure that you want to delete the video <strong id="modalDeleteVideoName"></strong>?
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="deleteVideo();">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
 
-    <script src="static/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script src="static/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
     <script src="static/slimScroll.min.js"></script>
     <script src="static/player.js"></script>
 
     <script>
-    $(function() {
-        $('#storedVideosList').slimScroll(
-            {
-                height: '500px',
-                size: '8px',
-                alwaysVisible: true,
-                railVisible: true
-            }
-        );
-    });
+        var availableVideos = [];
+        var vmVideos;
+
+        $(function () {
+
+            vmVideos = new Vue({
+                el: '#videoList',
+                data: { videos: availableVideos }
+            });
+
+            loadVideos();
+
+        });
     </script>
 </body>
 
