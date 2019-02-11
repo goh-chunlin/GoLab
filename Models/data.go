@@ -1,7 +1,7 @@
 package models
 
 import (
-	"GoLab/util"
+	util "GoLab/Util"
 	"database/sql"
 	"os"
 )

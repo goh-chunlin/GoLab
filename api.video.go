@@ -1,8 +1,8 @@
 package main
 
 import (
-	"GoLab/models"
-	"GoLab/util"
+	"GoLab/Models"
+	"GoLab/Util"
 	"encoding/json"
 	"net/http"
 	"path"

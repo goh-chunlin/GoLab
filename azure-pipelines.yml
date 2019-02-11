@@ -4,9 +4,6 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/go
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/languages/go?view=azure-devops
 
-variables:
-  GOPATH: '$(system.defaultWorkingDirectory)' # Go workspace path
-
 resources:
 - repo: self
 
