@@ -1,9 +1,9 @@
 package main
 
 import (
-	"GoLab/Models"
 	"encoding/json"
 	"mime"
+	"models"
 	"net/http"
 )
 

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"GoLab/Models"
 	"database/sql"
+	"models"
 	"net/http"
 	"os"
 

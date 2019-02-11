@@ -1,9 +1,9 @@
 package models
 
 import (
-	util "GoLab/Util"
 	"database/sql"
 	"os"
+	"util"
 )
 
 var db *sql.DB

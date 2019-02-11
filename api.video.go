@@ -1,12 +1,12 @@
 package main
 
 import (
-	"GoLab/Models"
-	"GoLab/Util"
 	"encoding/json"
+	"models"
 	"net/http"
 	"path"
 	"strconv"
+	"util"
 )
 
 func handleVideoAPIRequests(writer http.ResponseWriter, request *http.Request) {
