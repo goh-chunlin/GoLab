@@ -3,8 +3,9 @@ package main
 import (
 	"encoding/json"
 	"mime"
-	"models"
 	"net/http"
+
+	"github.com/goh-chunlin/GoLab/models"
 )
 
 func index(writer http.ResponseWriter, request *http.Request) {

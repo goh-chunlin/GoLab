@@ -2,10 +2,10 @@ package main
 
 import (
 	"database/sql"
-	"models"
 	"net/http"
 	"os"
 
+	"github.com/goh-chunlin/GoLab/models"
 	_ "github.com/lib/pq" // Create package-level variables and execute the init function of that package.
 )
 

@@ -3,7 +3,8 @@ package models
 import (
 	"database/sql"
 	"os"
-	"util"
+
+	"github.com/goh-chunlin/GoLab/util"
 )
 
 var db *sql.DB
