@@ -25,9 +25,9 @@ func main() {
 	mux.HandleFunc("/static/", handleRequestWithLog(staticFile))
 
 	mux.HandleFunc("/", handleRequestWithLog(index))
-	mux.HandleFunc("/addVideo", handleRequestWithLog(addVideo))
-	mux.HandleFunc("/updateVideo", handleRequestWithLog(updateVideo))
-	mux.HandleFunc("/deleteVideo", handleRequestWithLog(deleteVideo))
+	mux.HandleFunc("/login", handleRequestWithLog(handleLoginRequest))
+	// mux.HandleFunc("/logout", handleRequestWithLog(handleLogoutRequest))
+	mux.HandleFunc("/oauth2callback", handleRequestWithLog(oauthCallbackHandler))
 
 	mux.HandleFunc("/api/video/", handleRequestWithLog(handleVideoAPIRequests))
 
