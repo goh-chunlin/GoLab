@@ -8,6 +8,7 @@ type Video struct {
 	Name           string `json:"videoTitle"`
 	URL            string `json:"url"`
 	YoutubeVideoID string `json:"youtubeVideoId"`
+	CreatedBy      string `json:"createdBy"`
 }
 
 // GetVideo returns one single video record based on id
@@ -21,7 +22,7 @@ func GetVideo(id int) (video Video, err error) {
 }
 
 // GetAllVideos returns all video records
-func GetAllVideos() (videos []Video, err error) {
+func GetAllVideos(userID string) (videos []Video, err error) {
 	videos = []Video{}
 
 	// Read data from table.
@@ -36,6 +37,7 @@ func GetAllVideos() (videos []Video, err error) {
 
 		err := rows.Scan(&video.ID, &video.Name, &video.URL)
 		video.YoutubeVideoID = video.URL[32:len(video.URL)]
+		video.CreatedBy = userID
 
 		if err == sql.ErrNoRows {
 

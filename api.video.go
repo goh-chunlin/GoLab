@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"path"
 	"strconv"
@@ -31,12 +32,17 @@ func handleVideoAPIRequests(writer http.ResponseWriter, request *http.Request) {
 }
 
 func handleVideoAPIGet(writer http.ResponseWriter, request *http.Request) (err error) {
+	user := profileFromSession(request)
+	if user == nil {
+		err = errors.New("sorry, you are not authorized")
+	}
+
 	videoIDURL := path.Base(request.URL.Path)
 
 	var output []byte
 
 	if videoIDURL == "video" {
-		videos, errIf := models.GetAllVideos()
+		videos, errIf := models.GetAllVideos(user.ID)
 		err = errIf
 		util.CheckError(errIf)
 
