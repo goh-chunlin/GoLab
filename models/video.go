@@ -1,6 +1,9 @@
 package models
 
-import "database/sql"
+import (
+	"database/sql"
+	"time"
+)
 
 // Video is a record of favourite video
 type Video struct {
@@ -8,14 +11,15 @@ type Video struct {
 	Name           string `json:"videoTitle"`
 	URL            string `json:"url"`
 	YoutubeVideoID string `json:"youtubeVideoId"`
-	CreatedBy      string `json:"createdBy"`
 }
 
 // GetVideo returns one single video record based on id
-func GetVideo(id int) (video Video, err error) {
+func GetVideo(userID string, id int) (video Video, err error) {
 	video = Video{}
 
-	err = db.QueryRow("SELECT id, name, url FROM videos WHERE id = $1;", id).Scan(&video.ID, &video.Name, &video.URL)
+	sqlStatement := "SELECT id, name, url FROM videos WHERE created_by = $1 AND id = $2;"
+
+	err = db.QueryRow(sqlStatement, userID, id).Scan(&video.ID, &video.Name, &video.URL)
 	video.YoutubeVideoID = video.URL[32:len(video.URL)]
 
 	return
@@ -26,9 +30,9 @@ func GetAllVideos(userID string) (videos []Video, err error) {
 	videos = []Video{}
 
 	// Read data from table.
-	sqlStatement := "SELECT * FROM videos ORDER BY id;"
+	sqlStatement := "SELECT * FROM videos WHERE created_by = $1 ORDER BY id;"
 
-	rows, err := db.Query(sqlStatement)
+	rows, err := db.Query(sqlStatement, userID)
 
 	defer rows.Close()
 
@@ -37,7 +41,6 @@ func GetAllVideos(userID string) (videos []Video, err error) {
 
 		err := rows.Scan(&video.ID, &video.Name, &video.URL)
 		video.YoutubeVideoID = video.URL[32:len(video.URL)]
-		video.CreatedBy = userID
 
 		if err == sql.ErrNoRows {
 
@@ -54,19 +57,19 @@ func GetAllVideos(userID string) (videos []Video, err error) {
 }
 
 // CreateVideo creates a new video record in the database
-func (video *Video) CreateVideo() (err error) {
-	sqlStatement := "INSERT INTO videos (name, url) VALUES ($1, $2);"
+func (video *Video) CreateVideo(userID string) (err error) {
+	sqlStatement := "INSERT INTO videos (name, url, created_at, created_by, updated_at, updated_by) VALUES ($1, $2, $3, $4, $3, $4);"
 
-	_, err = db.Exec(sqlStatement, video.Name, video.URL)
+	_, err = db.Exec(sqlStatement, video.Name, video.URL, time.Now(), userID)
 
 	return
 }
 
 // UpdateVideo is to update an existing video record in the database
-func (video *Video) UpdateVideo() (err error) {
-	sqlStatement := "UPDATE videos SET name = $1 WHERE id = $2;"
+func (video *Video) UpdateVideo(userID string) (err error) {
+	sqlStatement := "UPDATE videos SET name = $1, updated_at = $2, updated_by = $3 WHERE id = $4;"
 
-	_, err = db.Exec(sqlStatement, video.Name, video.ID)
+	_, err = db.Exec(sqlStatement, video.Name, time.Now(), userID, video.ID)
 
 	return
 }

@@ -63,7 +63,7 @@ func handleVideoAPIGet(writer http.ResponseWriter, request *http.Request) (err e
 		return
 	}
 
-	video, err := models.GetVideo(videoID)
+	video, err := models.GetVideo(user.ID, videoID)
 	util.CheckError(err)
 
 	output, err = json.MarshalIndent(&video, "", "\t")
@@ -76,6 +76,11 @@ func handleVideoAPIGet(writer http.ResponseWriter, request *http.Request) (err e
 }
 
 func handleVideoAPIPost(writer http.ResponseWriter, request *http.Request) (err error) {
+	user := profileFromSession(request)
+	if user == nil {
+		err = errors.New("sorry, you are not authorized")
+	}
+
 	length := request.ContentLength
 	body := make([]byte, length)
 	request.Body.Read(body)
@@ -84,7 +89,7 @@ func handleVideoAPIPost(writer http.ResponseWriter, request *http.Request) (err 
 
 	json.Unmarshal(body, &video)
 
-	err = video.CreateVideo()
+	err = video.CreateVideo(user.ID)
 	util.CheckError(err)
 
 	apiStatus := models.APIStatus{
@@ -102,6 +107,11 @@ func handleVideoAPIPost(writer http.ResponseWriter, request *http.Request) (err 
 }
 
 func handleVideoAPIPut(writer http.ResponseWriter, request *http.Request) (err error) {
+	user := profileFromSession(request)
+	if user == nil {
+		err = errors.New("sorry, you are not authorized")
+	}
+
 	videoIDURL := path.Base(request.URL.Path)
 
 	videoID, err := strconv.Atoi(videoIDURL)
@@ -111,7 +121,7 @@ func handleVideoAPIPut(writer http.ResponseWriter, request *http.Request) (err e
 		return
 	}
 
-	video, err := models.GetVideo(videoID)
+	video, err := models.GetVideo(user.ID, videoID)
 	util.CheckError(err)
 
 	length := request.ContentLength
@@ -120,7 +130,7 @@ func handleVideoAPIPut(writer http.ResponseWriter, request *http.Request) (err e
 
 	json.Unmarshal(body, &video)
 
-	err = video.UpdateVideo()
+	err = video.UpdateVideo(user.ID)
 	util.CheckError(err)
 
 	apiStatus := models.APIStatus{
@@ -138,6 +148,11 @@ func handleVideoAPIPut(writer http.ResponseWriter, request *http.Request) (err e
 }
 
 func handleVideoAPIDelete(writer http.ResponseWriter, request *http.Request) (err error) {
+	user := profileFromSession(request)
+	if user == nil {
+		err = errors.New("sorry, you are not authorized")
+	}
+
 	videoIDURL := path.Base(request.URL.Path)
 
 	videoID, err := strconv.Atoi(videoIDURL)
@@ -147,7 +162,7 @@ func handleVideoAPIDelete(writer http.ResponseWriter, request *http.Request) (er
 		return
 	}
 
-	video, err := models.GetVideo(videoID)
+	video, err := models.GetVideo(user.ID, videoID)
 	util.CheckError(err)
 
 	err = video.DeleteVideo()
