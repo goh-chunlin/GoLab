@@ -6,7 +6,16 @@ import (
 )
 
 func index(writer http.ResponseWriter, request *http.Request) {
-	http.ServeFile(writer, request, "templates/index.html")
+	user := profileFromSession(request)
+	if user != nil {
 
-	writer.Header().Set("Content-Type", mime.TypeByExtension("html"))
+		http.ServeFile(writer, request, "templates/index.html")
+
+		writer.Header().Set("Content-Type", mime.TypeByExtension("html"))
+
+	} else {
+
+		http.Redirect(writer, request, "/player", http.StatusFound)
+
+	}
 }
