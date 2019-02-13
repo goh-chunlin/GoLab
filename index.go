@@ -7,7 +7,7 @@ import (
 
 func index(writer http.ResponseWriter, request *http.Request) {
 	user := profileFromSession(request)
-	if user != nil {
+	if user == nil {
 
 		http.ServeFile(writer, request, "templates/index.html")
 
