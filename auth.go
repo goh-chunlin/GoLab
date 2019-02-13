@@ -55,6 +55,23 @@ func handleLoginRequest(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, url, http.StatusFound)
 }
 
+// handleLogoutRequest clears the default session.
+func handleLogoutRequest(w http.ResponseWriter, r *http.Request) {
+	session, err := SessionStore.New(r, defaultSessionID)
+	if err != nil {
+		util.CheckError(err)
+	}
+	session.Options.MaxAge = -1 // Clear session.
+	if err := session.Save(r, w); err != nil {
+		util.CheckError(err)
+	}
+	redirectURL := r.FormValue("redirect")
+	if redirectURL == "" {
+		redirectURL = "/"
+	}
+	http.Redirect(w, r, redirectURL, http.StatusFound)
+}
+
 // validateRedirectURL checks that the URL provided is valid.
 // If the URL is missing, redirect the user to the application's root.
 // The URL must not be absolute (i.e., the URL must refer to a path within this
@@ -125,23 +142,6 @@ func fetchProfile(ctx context.Context, tok *oauth2.Token) (*plus.Person, error) 
 		return nil, err
 	}
 	return plusService.People.Get("me").Do()
-}
-
-// logoutHandler clears the default session.
-func logoutHandler(w http.ResponseWriter, r *http.Request) {
-	session, err := SessionStore.New(r, defaultSessionID)
-	if err != nil {
-		util.CheckError(err)
-	}
-	session.Options.MaxAge = -1 // Clear session.
-	if err := session.Save(r, w); err != nil {
-		util.CheckError(err)
-	}
-	redirectURL := r.FormValue("redirect")
-	if redirectURL == "" {
-		redirectURL = "/"
-	}
-	http.Redirect(w, r, redirectURL, http.StatusFound)
 }
 
 // profileFromSession retreives the Google+ profile from the default session.
