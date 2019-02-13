@@ -38,10 +38,7 @@ func handleLoginRequest(w http.ResponseWriter, r *http.Request) {
 
 	oauthFlowSession.Options.MaxAge = 3600 // 1 hour, i.e. 3,600 seconds
 
-	redirectURL, err := validateRedirectURL(r.FormValue("redirect"))
-	util.CheckError(err)
-
-	oauthFlowSession.Values[oauthFlowRedirectKey] = redirectURL
+	oauthFlowSession.Values[oauthFlowRedirectKey] = "/player"
 
 	if err := oauthFlowSession.Save(r, w); err != nil {
 		util.CheckError(err)
