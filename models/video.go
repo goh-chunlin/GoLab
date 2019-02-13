@@ -30,7 +30,7 @@ func GetAllVideos(userID string) (videos []Video, err error) {
 	videos = []Video{}
 
 	// Read data from table.
-	sqlStatement := "SELECT * FROM videos WHERE created_by = $1 ORDER BY id;"
+	sqlStatement := "SELECT id, name, url FROM videos WHERE created_by = $1 ORDER BY id;"
 
 	rows, err := db.Query(sqlStatement, userID)
 

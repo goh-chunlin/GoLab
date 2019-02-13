@@ -4,12 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"os"
 	"path"
 	"strconv"
-	"time"
 
-	"github.com/Microsoft/ApplicationInsights-Go/appinsights"
 	"github.com/goh-chunlin/GoLab/models"
 	"github.com/goh-chunlin/GoLab/util"
 )
@@ -35,22 +32,10 @@ func handleVideoAPIRequests(writer http.ResponseWriter, request *http.Request) {
 }
 
 func handleVideoAPIGet(writer http.ResponseWriter, request *http.Request) (err error) {
-	client := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
-
-	trace := appinsights.NewTraceTelemetry("handleVideoAPIGet", appinsights.Information)
-	trace.Timestamp = time.Now()
-
-	client.Track(trace)
-
 	user := profileFromSession(request)
 	if user == nil {
 		err = errors.New("sorry, you are not authorized")
 	}
-
-	trace = appinsights.NewTraceTelemetry(user.ID, appinsights.Information)
-	trace.Timestamp = time.Now()
-
-	client.Track(trace)
 
 	videoIDURL := path.Base(request.URL.Path)
 
