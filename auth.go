@@ -30,43 +30,43 @@ func init() {
 	gob.Register(&Profile{})
 }
 
-func handleLoginRequest(w http.ResponseWriter, r *http.Request) {
+func handleLoginRequest(writer http.ResponseWriter, request *http.Request) {
 	sessionID := uuid.Must(uuid.NewV4()).String()
 
-	oauthFlowSession, err := SessionStore.New(r, sessionID)
+	oauthFlowSession, err := SessionStore.New(request, sessionID)
 	util.CheckError(err)
 
 	oauthFlowSession.Options.MaxAge = 3600 // 1 hour, i.e. 3,600 seconds
 
 	oauthFlowSession.Values[oauthFlowRedirectKey] = "/player"
 
-	if err := oauthFlowSession.Save(r, w); err != nil {
+	if err := oauthFlowSession.Save(request, writer); err != nil {
 		util.CheckError(err)
 	}
 
 	// Use the session ID for the "state" parameter.
 	// This protects against CSRF (cross-site request forgery).
 	// See https://godoc.org/golang.org/x/oauth2#Config.AuthCodeURL for more detail.
-	url := OAuthConfig.AuthCodeURL(sessionID, oauth2.ApprovalForce,
+	authCodeURL := OAuthConfig.AuthCodeURL(sessionID, oauth2.ApprovalForce,
 		oauth2.AccessTypeOnline)
-	http.Redirect(w, r, url, http.StatusFound)
+	http.Redirect(writer, request, authCodeURL, http.StatusFound)
 }
 
 // handleLogoutRequest clears the default session.
-func handleLogoutRequest(w http.ResponseWriter, r *http.Request) {
-	session, err := SessionStore.New(r, defaultSessionID)
+func handleLogoutRequest(writer http.ResponseWriter, request *http.Request) {
+	session, err := SessionStore.New(request, defaultSessionID)
 	if err != nil {
 		util.CheckError(err)
 	}
 	session.Options.MaxAge = -1 // Clear session.
-	if err := session.Save(r, w); err != nil {
+	if err := session.Save(request, writer); err != nil {
 		util.CheckError(err)
 	}
-	redirectURL := r.FormValue("redirect")
+	redirectURL := request.FormValue("redirect")
 	if redirectURL == "" {
 		redirectURL = "/"
 	}
-	http.Redirect(w, r, redirectURL, http.StatusFound)
+	http.Redirect(writer, request, redirectURL, http.StatusFound)
 }
 
 // validateRedirectURL checks that the URL provided is valid.
@@ -83,9 +83,11 @@ func validateRedirectURL(path string) (string, error) {
 	if err != nil {
 		return "/", err
 	}
+
 	if parsedURL.IsAbs() {
 		return "/", errors.New("URL must not be absolute")
 	}
+
 	return path, nil
 }
 
@@ -159,6 +161,7 @@ func profileFromSession(r *http.Request) *Profile {
 	return profile
 }
 
+// Profile is the user profile of logged in user
 type Profile struct {
 	ID, DisplayName, ImageURL string
 }

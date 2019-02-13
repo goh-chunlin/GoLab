@@ -9,25 +9,23 @@ import (
 )
 
 var (
+	// OAuthConfig stores the configuration of OAuth2
 	OAuthConfig *oauth2.Config
 
+	// SessionStore is the cookie store
 	SessionStore sessions.Store
 )
 
 func init() {
-	// [START auth]
 	// To enable user sign-in
 	OAuthConfig = configureOAuthClient(os.Getenv("OAUTH_CLIENT_ID"), os.Getenv("OAUTH_CLIENT_SECRET"))
-	// [END auth]
 
-	// [START sessions]
 	// Configure storage method for session-wide information.
 	cookieStore := sessions.NewCookieStore([]byte(os.Getenv("COOKIE_STORE_SECRET")))
 	cookieStore.Options = &sessions.Options{
 		HttpOnly: true,
 	}
 	SessionStore = cookieStore
-	// [END sessions]
 }
 
 func configureOAuthClient(clientID, clientSecret string) *oauth2.Config {
