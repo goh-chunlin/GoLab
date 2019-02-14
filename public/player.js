@@ -23,7 +23,9 @@ function loadVideos() {
                 );
             },
             error: function (e) {
-                console.log(e.Message);
+
+                addSystemMessage('alert-danger', 'HTTP ' + e.status + ': ' + e.statusText + '.');
+
             }
         }
     );
@@ -41,17 +43,26 @@ function addVideo() {
             }),
             dataType: "json",
             success: function (result) {
+
                 if (result.status) {
-
                     loadVideos();
-                    $('#hidVideoID').val('');
-                    $('#hidVideoName').val('');
-                    $('#btnAddToList').attr("disabled", true);
-
+                    addSystemMessage('alert-success', result.message);
+                } else {
+                    addSystemMessage('alert-danger', result.message);
                 }
+
             },
             error: function (e) {
-                console.log(e.Message);
+
+                addSystemMessage('alert-danger', 'HTTP ' + e.status + ': ' + e.statusText + '.');
+
+            },
+            complete: function (e) {
+
+                $('#hidVideoID').val('');
+                $('#hidVideoName').val('');
+                $('#btnAddToList').attr("disabled", true);
+
             }
         }
     );
@@ -68,15 +79,24 @@ function updateVideo() {
             }),
             dataType: "json",
             success: function (result) {
+
                 if (result.status) {
-
                     loadVideos();
-                    $('#modalUpdateVideoInfo').modal('hide');
-
+                    addSystemMessage('alert-success', result.message);
+                } else {
+                    addSystemMessage('alert-danger', result.message);
                 }
+
             },
             error: function (e) {
-                console.log(e);
+
+                addSystemMessage('alert-danger', 'HTTP ' + e.status + ': ' + e.statusText + '.');
+
+            },
+            complete: function (e) {
+
+                $('#modalUpdateVideoInfo').modal('hide');
+
             }
         }
     );
@@ -92,17 +112,24 @@ function deleteVideo() {
             data: JSON.stringify({}),
             dataType: "json",
             success: function (result) {
+
                 if (result.status) {
-
                     loadVideos();
-                    $('#modalDeleteVideo').modal('hide');
-
+                    addSystemMessage('alert-success', result.message);
+                } else {
+                    addSystemMessage('alert-danger', result.message);
                 }
-                console.log('Deleted');
-                console.log(result);
+
             },
             error: function (e) {
-                console.log(e.Message);
+
+                addSystemMessage('alert-danger', 'HTTP ' + e.status + ': ' + e.statusText + '.');
+
+            },
+            complete: function (e) {
+
+                $('#modalDeleteVideo').modal('hide');
+
             }
         }
     );
@@ -172,4 +199,14 @@ function showDeleteVideoPopup(videoId, videoName) {
 
     $('#modalDeleteVideoVideoId').val(videoId);
     $('#modalDeleteVideoName').html(videoName);
+}
+
+function addSystemMessage(alertClassName, message) {
+
+    $('#systemMessagePanel').append(
+        '<div class="alert alert-dismissible ' + alertClassName + '">' +
+            '<button type="button" class="close" data-dismiss="alert">&times;</button>' +
+            message +
+        '</div>');
+
 }

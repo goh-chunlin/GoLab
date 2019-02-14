@@ -99,7 +99,7 @@ func handleVideoAPIPost(writer http.ResponseWriter, request *http.Request) (err 
 
 	apiStatus := models.APIStatus{
 		Status:  true,
-		Message: "A video is successfully added to the database." + string(body[:length]),
+		Message: "A video is successfully added to the database.",
 	}
 	output, err := json.MarshalIndent(&apiStatus, "", "\t")
 	util.CheckError(err)
