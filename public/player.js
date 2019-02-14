@@ -57,34 +57,6 @@ function addVideo() {
     );
 }
 
-function addVideo() {
-    $.ajax(
-        {
-            url: "/api/video/",
-            cache: false,
-            type: "POST",
-            data: JSON.stringify({
-                videoTitle: $('#hidVideoName').val(),
-                url: 'https://www.youtube.com/watch?v=' + $('#hidVideoID').val()
-            }),
-            dataType: "json",
-            success: function (result) {
-                if (result.status) {
-
-                    loadVideos();
-                    $('#hidVideoID').val('');
-                    $('#hidVideoName').val('');
-                    $('#btnAddToList').attr("disabled", true);
-
-                }
-            },
-            error: function (e) {
-                console.log(e.Message);
-            }
-        }
-    );
-}
-
 function updateVideo() {
     $.ajax(
         {

@@ -35,6 +35,8 @@ func handleVideoAPIGet(writer http.ResponseWriter, request *http.Request) (err e
 	user := profileFromSession(request)
 	if user == nil {
 		err = errors.New("sorry, you are not authorized")
+		writer.WriteHeader(401)
+		return
 	}
 
 	videoIDURL := path.Base(request.URL.Path)
@@ -79,6 +81,9 @@ func handleVideoAPIPost(writer http.ResponseWriter, request *http.Request) (err 
 	user := profileFromSession(request)
 	if user == nil {
 		err = errors.New("sorry, you are not authorized")
+		writer.WriteHeader(401)
+
+		return
 	}
 
 	length := request.ContentLength
@@ -110,6 +115,9 @@ func handleVideoAPIPut(writer http.ResponseWriter, request *http.Request) (err e
 	user := profileFromSession(request)
 	if user == nil {
 		err = errors.New("sorry, you are not authorized")
+		writer.WriteHeader(401)
+
+		return
 	}
 
 	videoIDURL := path.Base(request.URL.Path)
@@ -151,6 +159,9 @@ func handleVideoAPIDelete(writer http.ResponseWriter, request *http.Request) (er
 	user := profileFromSession(request)
 	if user == nil {
 		err = errors.New("sorry, you are not authorized")
+		writer.WriteHeader(401)
+
+		return
 	}
 
 	videoIDURL := path.Base(request.URL.Path)
