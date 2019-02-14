@@ -3,6 +3,8 @@
 # Add steps that test, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/go
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/languages/go?view=azure-devops
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/go?view=azure-devops
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/tool/go-tool?view=azure-devops
 
 resources:
 - repo: self
@@ -24,6 +26,13 @@ steps:
   inputs:
     command: build
     arguments: '-o "$(System.TeamProject).exe"'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+steps:
+- task: Go@0
+  displayName: 'go test'
+  inputs:
+    command: test
     workingDirectory: '$(System.DefaultWorkingDirectory)'
 
 - task: ArchiveFiles@2
