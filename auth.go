@@ -24,6 +24,9 @@ const (
 	oauthFlowRedirectKey = "redirect"
 )
 
+// This flag is for the use of unit testing to do fake login
+var isTesting bool
+
 func init() {
 	// Gob encoding for gorilla/sessions
 	gob.Register(&oauth2.Token{})
@@ -146,6 +149,14 @@ func fetchProfile(ctx context.Context, tok *oauth2.Token) (*plus.Person, error) 
 // profileFromSession retreives the Google+ profile from the default session.
 // Returns nil if the profile cannot be retreived (e.g. user is logged out).
 func profileFromSession(request *http.Request) *Profile {
+	if isTesting {
+		return &Profile{
+			ID:          "106254445598520636982",
+			DisplayName: "Chun Lin",
+			ImageURL:    "https://avatars1.githubusercontent.com/u/8535306?s=460&v=4",
+		}
+	}
+
 	session, err := SessionStore.Get(request, defaultSessionID)
 	if err != nil {
 		return nil
@@ -158,6 +169,7 @@ func profileFromSession(request *http.Request) *Profile {
 	if !ok {
 		return nil
 	}
+
 	return profile
 }
 
