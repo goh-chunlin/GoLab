@@ -76,7 +76,7 @@ function updateVideo() {
                 }
             },
             error: function (e) {
-                console.log(e.Message);
+                console.log(e);
             }
         }
     );
