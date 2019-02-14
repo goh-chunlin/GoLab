@@ -93,8 +93,8 @@ func validateRedirectURL(path string) (string, error) {
 
 // oauthCallbackHandler completes the OAuth flow, retreives the user's profile
 // information and stores it in a session.
-func oauthCallbackHandler(w http.ResponseWriter, r *http.Request) {
-	oauthFlowSession, err := SessionStore.Get(r, r.FormValue("state"))
+func oauthCallbackHandler(writer http.ResponseWriter, request *http.Request) {
+	oauthFlowSession, err := SessionStore.Get(request, request.FormValue("state"))
 	if err != nil {
 		util.CheckError(err)
 	}
@@ -105,13 +105,13 @@ func oauthCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		util.CheckError(err)
 	}
 
-	code := r.FormValue("code")
+	code := request.FormValue("code")
 	tok, err := OAuthConfig.Exchange(context.Background(), code)
 	if err != nil {
 		util.CheckError(err)
 	}
 
-	session, err := SessionStore.New(r, defaultSessionID)
+	session, err := SessionStore.New(request, defaultSessionID)
 	if err != nil {
 		util.CheckError(err)
 	}
@@ -125,11 +125,11 @@ func oauthCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	session.Values[oauthTokenSessionKey] = tok
 	// Strip the profile to only the fields we need. Otherwise the struct is too big.
 	session.Values[googleProfileSessionKey] = stripProfile(profile)
-	if err := session.Save(r, w); err != nil {
+	if err := session.Save(request, writer); err != nil {
 		util.CheckError(err)
 	}
 
-	http.Redirect(w, r, redirectURL, http.StatusFound)
+	http.Redirect(writer, request, redirectURL, http.StatusFound)
 }
 
 // fetchProfile retrieves the Google+ profile of the user associated with the
@@ -145,8 +145,8 @@ func fetchProfile(ctx context.Context, tok *oauth2.Token) (*plus.Person, error) 
 
 // profileFromSession retreives the Google+ profile from the default session.
 // Returns nil if the profile cannot be retreived (e.g. user is logged out).
-func profileFromSession(r *http.Request) *Profile {
-	session, err := SessionStore.Get(r, defaultSessionID)
+func profileFromSession(request *http.Request) *Profile {
+	session, err := SessionStore.Get(request, defaultSessionID)
 	if err != nil {
 		return nil
 	}
