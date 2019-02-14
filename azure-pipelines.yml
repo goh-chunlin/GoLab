@@ -28,7 +28,6 @@ steps:
     arguments: '-o "$(System.TeamProject).exe"'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-steps:
 - task: Go@0
   displayName: 'go test'
   inputs:
