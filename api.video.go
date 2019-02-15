@@ -7,8 +7,7 @@ import (
 	"path"
 	"strconv"
 
-	"GoLab/models"
-
+	"github.com/goh-chunlin/GoLab/models"
 	"github.com/goh-chunlin/GoLab/util"
 )
 

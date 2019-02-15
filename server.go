@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"GoLab/models"
+	"github.com/goh-chunlin/GoLab/models"
 
 	_ "github.com/lib/pq" // Create package-level variables and execute the init function of that package.
 )

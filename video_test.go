@@ -1,12 +1,13 @@
 package main
 
 import (
-	"GoLab/models"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
+
+	"github.com/goh-chunlin/GoLab/models"
 )
 
 var mux *http.ServeMux
