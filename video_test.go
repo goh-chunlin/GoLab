@@ -1,6 +1,8 @@
 package main
 
 import (
+	"GoLab/models"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -19,7 +21,7 @@ func TestMain(m *testing.M) {
 func setUp() {
 	isTesting = true
 	mux = http.NewServeMux()
-	mux.HandleFunc("/api/video", handleVideoAPIRequests)
+	mux.HandleFunc("/api/video", handleVideoAPIRequests(&models.FakeVideo{}))
 	writer = httptest.NewRecorder()
 }
 
@@ -34,10 +36,10 @@ func TestHandleGetAllVideos(t *testing.T) {
 		t.Errorf("Response code is %v", writer.Code)
 	}
 
-	// var videos []models.Video
-	// json.Unmarshal(writer.Body.Bytes(), &videos)
+	var videos []models.Video
+	json.Unmarshal(writer.Body.Bytes(), &videos)
 
-	// if len(videos) == 0 {
-	// 	t.Errorf("No video available")
-	// }
+	if len(videos) == 0 {
+		t.Errorf("No video available")
+	}
 }

@@ -151,7 +151,7 @@ func fetchProfile(ctx context.Context, tok *oauth2.Token) (*plus.Person, error) 
 func profileFromSession(request *http.Request) *Profile {
 	if isTesting {
 		return &Profile{
-			ID:          "106254445598520636982",
+			ID:          "154226945598527500122",
 			DisplayName: "Chun Lin",
 			ImageURL:    "https://avatars1.githubusercontent.com/u/8535306?s=460&v=4",
 		}

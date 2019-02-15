@@ -5,23 +5,23 @@ import (
 )
 
 func updateVideo(writer http.ResponseWriter, request *http.Request) {
-	request.ParseForm()
+	// request.ParseForm()
 
-	err := db.Ping()
-	checkError(err)
+	// err := db.Ping()
+	// checkError(err)
 
-	if err != nil {
+	// if err != nil {
 
-		http.Redirect(writer, request, "/index", http.StatusSeeOther)
+	// 	http.Redirect(writer, request, "/index", http.StatusSeeOther)
 
-	} else {
+	// } else {
 
-		// Update data in the table.
-		sqlStatement := "UPDATE videos SET name = $1 WHERE url = $2;"
+	// 	// Update data in the table.
+	// 	sqlStatement := "UPDATE videos SET name = $1 WHERE url = $2;"
 
-		_, err = db.Exec(sqlStatement, request.PostForm["VideoName"][0], "https://www.youtube.com/watch?v="+(request.PostForm["hidVideoID"][0]))
-		checkError(err)
+	// 	_, err = db.Exec(sqlStatement, request.PostForm["VideoName"][0], "https://www.youtube.com/watch?v="+(request.PostForm["hidVideoID"][0]))
+	// 	checkError(err)
 
-		http.Redirect(writer, request, "/index", http.StatusSeeOther)
-	}
+	// 	http.Redirect(writer, request, "/index", http.StatusSeeOther)
+	// }
 }

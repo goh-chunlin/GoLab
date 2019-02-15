@@ -5,17 +5,14 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/goh-chunlin/GoLab/models"
+	"GoLab/models"
+
 	_ "github.com/lib/pq" // Create package-level variables and execute the init function of that package.
 )
 
-var db *sql.DB
-
 func main() {
-	var err error
-
 	// Initialize connection object.
-	db, err = sql.Open("postgres", os.Getenv("CONNECTION_STRING"))
+	db, err := sql.Open("postgres", os.Getenv("CONNECTION_STRING"))
 	checkError(err)
 
 	models.Init()
@@ -30,7 +27,7 @@ func main() {
 	mux.HandleFunc("/logout", handleRequestWithLog(handleLogoutRequest))
 	mux.HandleFunc("/oauth2callback", handleRequestWithLog(oauthCallbackHandler))
 
-	mux.HandleFunc("/api/video/", handleRequestWithLog(handleVideoAPIRequests))
+	mux.HandleFunc("/api/video/", handleRequestWithLog(handleVideoAPIRequests(&models.Video{Db: db})))
 
 	err = http.ListenAndServe(getPort(), mux)
 	checkError(err)

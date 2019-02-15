@@ -5,23 +5,23 @@ import (
 )
 
 func deleteVideo(writer http.ResponseWriter, request *http.Request) {
-	request.ParseForm()
+	// request.ParseForm()
 
-	err := db.Ping()
-	checkError(err)
+	// err := db.Ping()
+	// checkError(err)
 
-	if err != nil {
+	// if err != nil {
 
-		http.Redirect(writer, request, "/index", http.StatusSeeOther)
+	// 	http.Redirect(writer, request, "/index", http.StatusSeeOther)
 
-	} else {
+	// } else {
 
-		// Remove data from the table.
-		sqlStatement := "DELETE FROM videos WHERE url = $1;"
+	// 	// Remove data from the table.
+	// 	sqlStatement := "DELETE FROM videos WHERE url = $1;"
 
-		_, err = db.Exec(sqlStatement, "https://www.youtube.com/watch?v="+(request.PostForm["hidVideoID"][0]))
-		checkError(err)
+	// 	_, err = db.Exec(sqlStatement, "https://www.youtube.com/watch?v="+(request.PostForm["hidVideoID"][0]))
+	// 	checkError(err)
 
-		http.Redirect(writer, request, "/index", http.StatusSeeOther)
-	}
+	// 	http.Redirect(writer, request, "/index", http.StatusSeeOther)
+	// }
 }
