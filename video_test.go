@@ -40,7 +40,25 @@ func TestHandleGetAllVideos(t *testing.T) {
 	var videos []models.Video
 	json.Unmarshal(writer.Body.Bytes(), &videos)
 
-	if len(videos) == 0 {
-		t.Errorf("No video available")
+	if len(videos) != 2 {
+		t.Errorf("The list of videos is retrieved wrongly")
+	}
+}
+
+func TestHandleGetOneVideoById(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/api/video/4", nil)
+	mux.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	var video models.Video
+	json.Unmarshal(writer.Body.Bytes(), &video)
+
+	t.Log(video.ID)
+
+	if video.ID != 4 {
+		t.Errorf("No video with ID = 4 available")
 	}
 }

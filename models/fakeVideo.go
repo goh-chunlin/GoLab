@@ -17,12 +17,42 @@ type FakeVideo struct {
 
 // GetVideo returns one single video record based on id
 func (video *FakeVideo) GetVideo(userID string, id int) (err error) {
+	jsonFile, err := os.Open("testdata/fake_videos.json")
+
+	if err != nil {
+		return
+	}
+
+	defer jsonFile.Close()
+
+	jsonData, err := ioutil.ReadAll(jsonFile)
+
+	if err != nil {
+		return
+	}
+
+	var fakeVideos []FakeVideo
+	json.Unmarshal(jsonData, &fakeVideos)
+
+	for _, fakeVideo := range fakeVideos {
+		if fakeVideo.ID == id && fakeVideo.CreatedBy == userID {
+			video = &FakeVideo{
+				ID:             fakeVideo.ID,
+				Name:           fakeVideo.Name,
+				URL:            fakeVideo.URL,
+				YoutubeVideoID: fakeVideo.YoutubeVideoID,
+			}
+
+			return
+		}
+	}
+
 	return
 }
 
 // GetAllVideos returns all video records
 func (video *FakeVideo) GetAllVideos(userID string) (videos []Video, err error) {
-	jsonFile, err := os.Open("fake_videos.json")
+	jsonFile, err := os.Open("testdata/fake_videos.json")
 
 	if err != nil {
 		return
