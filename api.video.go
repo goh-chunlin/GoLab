@@ -95,18 +95,36 @@ func handleVideoAPIPost(writer http.ResponseWriter, request *http.Request, video
 	json.Unmarshal(body, &video)
 
 	err = video.CreateVideo(user.ID)
-	util.CheckError(err)
 
-	apiStatus := models.APIStatus{
-		Status:  true,
-		Message: "A video is successfully added to the database.",
+	if err != nil {
+
+		util.CheckError(err)
+
+		apiStatus := models.APIStatus{
+			Status:  false,
+			Message: err.Error(),
+		}
+		output, err := json.MarshalIndent(&apiStatus, "", "\t")
+		util.CheckError(err)
+
+		writer.WriteHeader(400)
+		writer.Header().Set("Content-Type", "application/json")
+		writer.Write(output)
+
+	} else {
+
+		apiStatus := models.APIStatus{
+			Status:  true,
+			Message: "A video is successfully added to the database.",
+		}
+		output, err := json.MarshalIndent(&apiStatus, "", "\t")
+		util.CheckError(err)
+
+		writer.WriteHeader(200)
+		writer.Header().Set("Content-Type", "application/json")
+		writer.Write(output)
+
 	}
-	output, err := json.MarshalIndent(&apiStatus, "", "\t")
-	util.CheckError(err)
-
-	writer.WriteHeader(200)
-	writer.Header().Set("Content-Type", "application/json")
-	writer.Write(output)
 
 	return
 }

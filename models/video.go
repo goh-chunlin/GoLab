@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 )
 
@@ -65,6 +66,15 @@ func (video *Video) GetAllVideos(userID string) (videos []Video, err error) {
 
 // CreateVideo creates a new video record in the database
 func (video *Video) CreateVideo(userID string) (err error) {
+	if video.Name == "" {
+		err = errors.New("the video name cannot be empty")
+
+		return
+	} else if video.URL == "" {
+		err = errors.New("the video URL cannot be empty")
+
+		return
+	}
 	sqlStatement := "INSERT INTO videos (name, url, created_at, created_by, updated_at, updated_by) VALUES ($1, $2, $3, $4, $3, $4);"
 
 	_, err = video.Db.Exec(sqlStatement, video.Name, video.URL, time.Now(), userID)

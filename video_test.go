@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -63,5 +64,76 @@ func TestHandleGetOneVideoById(t *testing.T) {
 
 	if video.ID != 4 {
 		t.Errorf("No video with ID = 4 available")
+	}
+}
+
+func TestHandleCreateNewVideo(t *testing.T) {
+	mux = http.NewServeMux()
+	mux.HandleFunc("/api/video/", handleVideoAPIRequests(&models.FakeVideo{}))
+	writer = httptest.NewRecorder()
+
+	var data = []byte(`{
+		"videoTitle": "Lanota - Dreams Go On",
+		"url": "https://www.youtube.com/watch?v=55H2rt1zy2g"
+		}`)
+
+	request, _ := http.NewRequest("POST", "/api/video/", bytes.NewBuffer(data))
+	request.Header.Add("Content-Type", "application/json")
+	mux.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+}
+
+func TestHandleCreateNewVideoWithoutVideoTitle(t *testing.T) {
+	mux = http.NewServeMux()
+	mux.HandleFunc("/api/video/", handleVideoAPIRequests(&models.FakeVideo{}))
+	writer = httptest.NewRecorder()
+
+	var data = []byte(`{
+		"url": "https://www.youtube.com/watch?v=55H2rt1zy2g"
+		}`)
+
+	request, _ := http.NewRequest("POST", "/api/video/", bytes.NewBuffer(data))
+	request.Header.Add("Content-Type", "application/json")
+	mux.ServeHTTP(writer, request)
+
+	if writer.Code != 400 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+}
+
+func TestHandleCreateNewVideoWithoutUrl(t *testing.T) {
+	mux = http.NewServeMux()
+	mux.HandleFunc("/api/video/", handleVideoAPIRequests(&models.FakeVideo{}))
+	writer = httptest.NewRecorder()
+
+	var data = []byte(`{
+		"videoTitle": "Lanota - Dreams Go On"
+		}`)
+
+	request, _ := http.NewRequest("POST", "/api/video/", bytes.NewBuffer(data))
+	request.Header.Add("Content-Type", "application/json")
+	mux.ServeHTTP(writer, request)
+
+	if writer.Code != 400 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+}
+
+func TestHandleCreateNewVideoWithoutVideoTitleAndUrl(t *testing.T) {
+	mux = http.NewServeMux()
+	mux.HandleFunc("/api/video/", handleVideoAPIRequests(&models.FakeVideo{}))
+	writer = httptest.NewRecorder()
+
+	var data = []byte(`{}`)
+
+	request, _ := http.NewRequest("POST", "/api/video/", bytes.NewBuffer(data))
+	request.Header.Add("Content-Type", "application/json")
+	mux.ServeHTTP(writer, request)
+
+	if writer.Code != 400 {
+		t.Errorf("Response code is %v", writer.Code)
 	}
 }

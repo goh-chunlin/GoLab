@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"os"
 )
@@ -86,6 +87,18 @@ func (video *FakeVideo) GetAllVideos(userID string) (videos []Video, err error) 
 
 // CreateVideo creates a new video record in the database
 func (video *FakeVideo) CreateVideo(userID string) (err error) {
+	if video.Name == "" {
+		err = errors.New("the video name cannot be empty")
+
+		return
+	} else if video.URL == "" {
+		err = errors.New("the video URL cannot be empty")
+
+		return
+	}
+
+	err = nil
+
 	return
 }
 
