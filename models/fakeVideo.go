@@ -36,12 +36,11 @@ func (video *FakeVideo) GetVideo(userID string, id int) (err error) {
 
 	for _, fakeVideo := range fakeVideos {
 		if fakeVideo.ID == id && fakeVideo.CreatedBy == userID {
-			video = &FakeVideo{
-				ID:             fakeVideo.ID,
-				Name:           fakeVideo.Name,
-				URL:            fakeVideo.URL,
-				YoutubeVideoID: fakeVideo.YoutubeVideoID,
-			}
+
+			video.ID = fakeVideo.ID
+			video.Name = fakeVideo.Name
+			video.URL = fakeVideo.URL
+			video.YoutubeVideoID = fakeVideo.YoutubeVideoID
 
 			return
 		}

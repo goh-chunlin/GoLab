@@ -21,13 +21,14 @@ func TestMain(m *testing.M) {
 
 func setUp() {
 	isTesting = true
-	mux = http.NewServeMux()
-	mux.HandleFunc("/api/video", handleVideoAPIRequests(&models.FakeVideo{}))
-	writer = httptest.NewRecorder()
 }
 
 func TestHandleGetAllVideos(t *testing.T) {
-	request, _ := http.NewRequest("GET", "/api/video", nil)
+	mux = http.NewServeMux()
+	mux.HandleFunc("/api/video/", handleVideoAPIRequests(&models.FakeVideo{}))
+	writer = httptest.NewRecorder()
+
+	request, _ := http.NewRequest("GET", "/api/video/", nil)
 	mux.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {
@@ -46,6 +47,10 @@ func TestHandleGetAllVideos(t *testing.T) {
 }
 
 func TestHandleGetOneVideoById(t *testing.T) {
+	mux = http.NewServeMux()
+	mux.HandleFunc("/api/video/", handleVideoAPIRequests(&models.FakeVideo{}))
+	writer = httptest.NewRecorder()
+
 	request, _ := http.NewRequest("GET", "/api/video/4", nil)
 	mux.ServeHTTP(writer, request)
 
@@ -55,8 +60,6 @@ func TestHandleGetOneVideoById(t *testing.T) {
 
 	var video models.Video
 	json.Unmarshal(writer.Body.Bytes(), &video)
-
-	t.Log(video.ID)
 
 	if video.ID != 4 {
 		t.Errorf("No video with ID = 4 available")
