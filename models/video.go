@@ -84,6 +84,12 @@ func (video *Video) CreateVideo(userID string) (err error) {
 
 // UpdateVideo is to update an existing video record in the database
 func (video *Video) UpdateVideo(userID string) (err error) {
+	if video.Name == "" {
+		err = errors.New("the video name cannot be empty")
+
+		return
+	}
+
 	sqlStatement := "UPDATE videos SET name = $1, updated_at = $2, updated_by = $3 WHERE id = $4;"
 
 	_, err = video.Db.Exec(sqlStatement, video.Name, time.Now(), userID, video.ID)

@@ -148,7 +148,22 @@ func handleVideoAPIPut(writer http.ResponseWriter, request *http.Request, video 
 	}
 
 	err = video.GetVideo(user.ID, videoID)
-	util.CheckError(err)
+	if err != nil {
+
+		util.CheckError(err)
+
+		apiStatus := models.APIStatus{
+			Status:  false,
+			Message: err.Error(),
+		}
+		output, err := json.MarshalIndent(&apiStatus, "", "\t")
+		util.CheckError(err)
+
+		writer.WriteHeader(400)
+		writer.Header().Set("Content-Type", "application/json")
+		writer.Write(output)
+
+	}
 
 	length := request.ContentLength
 	body := make([]byte, length)
@@ -157,18 +172,35 @@ func handleVideoAPIPut(writer http.ResponseWriter, request *http.Request, video 
 	json.Unmarshal(body, &video)
 
 	err = video.UpdateVideo(user.ID)
-	util.CheckError(err)
+	if err != nil {
 
-	apiStatus := models.APIStatus{
-		Status:  true,
-		Message: "A video record is successfully updated.",
+		util.CheckError(err)
+
+		apiStatus := models.APIStatus{
+			Status:  false,
+			Message: err.Error(),
+		}
+		output, err := json.MarshalIndent(&apiStatus, "", "\t")
+		util.CheckError(err)
+
+		writer.WriteHeader(400)
+		writer.Header().Set("Content-Type", "application/json")
+		writer.Write(output)
+
+	} else {
+
+		apiStatus := models.APIStatus{
+			Status:  true,
+			Message: "A video record is successfully updated.",
+		}
+		output, err := json.MarshalIndent(&apiStatus, "", "\t")
+		util.CheckError(err)
+
+		writer.WriteHeader(200)
+		writer.Header().Set("Content-Type", "application/json")
+		writer.Write(output)
+
 	}
-	output, err := json.MarshalIndent(&apiStatus, "", "\t")
-	util.CheckError(err)
-
-	writer.WriteHeader(200)
-	writer.Header().Set("Content-Type", "application/json")
-	writer.Write(output)
 
 	return
 }
@@ -192,21 +224,53 @@ func handleVideoAPIDelete(writer http.ResponseWriter, request *http.Request, vid
 	}
 
 	err = video.GetVideo(user.ID, videoID)
-	util.CheckError(err)
+	if err != nil {
+
+		util.CheckError(err)
+
+		apiStatus := models.APIStatus{
+			Status:  false,
+			Message: err.Error(),
+		}
+		output, err := json.MarshalIndent(&apiStatus, "", "\t")
+		util.CheckError(err)
+
+		writer.WriteHeader(400)
+		writer.Header().Set("Content-Type", "application/json")
+		writer.Write(output)
+
+	}
 
 	err = video.DeleteVideo()
-	util.CheckError(err)
+	if err != nil {
 
-	apiStatus := models.APIStatus{
-		Status:  true,
-		Message: "A video record is deleted.",
+		util.CheckError(err)
+
+		apiStatus := models.APIStatus{
+			Status:  false,
+			Message: err.Error(),
+		}
+		output, err := json.MarshalIndent(&apiStatus, "", "\t")
+		util.CheckError(err)
+
+		writer.WriteHeader(400)
+		writer.Header().Set("Content-Type", "application/json")
+		writer.Write(output)
+
+	} else {
+
+		apiStatus := models.APIStatus{
+			Status:  true,
+			Message: "A video record is deleted.",
+		}
+		output, err := json.MarshalIndent(&apiStatus, "", "\t")
+		util.CheckError(err)
+
+		writer.WriteHeader(200)
+		writer.Header().Set("Content-Type", "application/json")
+		writer.Write(output)
+
 	}
-	output, err := json.MarshalIndent(&apiStatus, "", "\t")
-	util.CheckError(err)
-
-	writer.WriteHeader(200)
-	writer.Header().Set("Content-Type", "application/json")
-	writer.Write(output)
 
 	return
 }

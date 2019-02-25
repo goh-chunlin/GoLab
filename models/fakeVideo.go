@@ -47,6 +47,8 @@ func (video *FakeVideo) GetVideo(userID string, id int) (err error) {
 		}
 	}
 
+	err = errors.New("no corresponding video found")
+
 	return
 }
 
@@ -104,10 +106,21 @@ func (video *FakeVideo) CreateVideo(userID string) (err error) {
 
 // UpdateVideo is to update an existing video record in the database
 func (video *FakeVideo) UpdateVideo(userID string) (err error) {
+	if video.Name == "" {
+		err = errors.New("the video name cannot be empty")
+
+		return
+	}
+
+	err = nil
+
 	return
 }
 
 // DeleteVideo is to delete an existing video record in the database
 func (video *FakeVideo) DeleteVideo() (err error) {
+
+	err = nil
+
 	return
 }
