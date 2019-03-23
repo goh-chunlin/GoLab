@@ -89,9 +89,9 @@
                                         <td valign="top">
                                             <span style="font-weight: bold;">{{ video.videoTitle }}</span>
                                             <br />
-                                            <a href="javascript:;" v-on:click="event.stopPropagation(); showUpdateVideoInfoPopup(video.id, video.videoTitle);">EDIT</a>
+                                            <a href="javascript:;" :data-videoId="video.id" :data-videoTitle="video.videoTitle" v-on:click="event.stopPropagation(); showUpdateVideoInfoPopup(video.id, video.videoTitle);">EDIT</a>
                                             |
-                                            <a href="javascript:;" class="text-danger" v-on:click="event.stopPropagation(); showDeleteVideoPopup(video.id, video.videoTitle);">DELETE</a>
+                                            <a href="javascript:;" class="text-danger" :data-videoId="video.id" :data-videoTitle="video.videoTitle" v-on:click="event.stopPropagation(); showDeleteVideoPopup(video.id, video.videoTitle);">DELETE</a>
                                         </td>
                                     </tr>
                                 </tbody>
