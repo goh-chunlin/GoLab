@@ -167,14 +167,7 @@
 
             vmVideos = new Vue({
                 el: '#videoList',
-                data: { videos: availableVideos },
-                methods: {
-                    show: function(event) {
-                        var value = event.target.value
-                        
-                        console.log(value)
-                    }
-                }
+                data: { videos: availableVideos }
             });
 
             loadVideos();
