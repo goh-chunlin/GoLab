@@ -173,10 +173,10 @@
             loadVideos();
 
             $('.btn-update-video-info').click(function(event) {
-                event.preventDefault(); 
+                event.stopPropagation(); 
 
-                var videoId = $(this).data('videoId');
-                var videoTitle = $(this).data('videoTitle');
+                var videoId = $(this).data('videoid');
+                var videoTitle = $(this).data('videotitle');
 
                 showUpdateVideoInfoPopup(videoId, videoTitle);
             });
