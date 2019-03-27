@@ -21,24 +21,6 @@ function loadVideos() {
                         railVisible: true
                     }
                 );
-
-                $('.btn-update-video-info').click(function(event) {
-                    event.stopPropagation(); 
-    
-                    var videoId = $(this).data('videoid');
-                    var videoTitle = $(this).data('videotitle');
-    
-                    showUpdateVideoInfoPopup(videoId, videoTitle);
-                });
-    
-                $('.btn-delete-video-info').click(function(event) {
-                    event.stopPropagation(); 
-    
-                    var videoId = $(this).data('videoid');
-                    var videoTitle = $(this).data('videotitle');
-    
-                    showDeleteVideoPopup(videoId, videoTitle);
-                });
             },
             error: function (e) {
 

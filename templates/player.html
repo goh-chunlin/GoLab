@@ -89,9 +89,9 @@
                                         <td valign="top">
                                             <span style="font-weight: bold;">{{ video.videoTitle }}</span>
                                             <br />
-                                            <a href="javascript:;" class="btn-update-video-info" :data-videoId="video.id" :data-videoTitle="video.videoTitle">EDIT</a>
+                                            <a href="javascript:;" v-on:click.stop="showUpdateVideoInfoPopup(video.id, video.videoTitle)">EDIT</a>
                                             |
-                                            <a href="javascript:;" class="text-danger btn-delete-video" :data-videoId="video.id" :data-videoTitle="video.videoTitle">DELETE</a>
+                                            <a href="javascript:;" v-on:click.stop="showDeleteVideoPopup(video.id, video.videoTitle)">DELETE</a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -167,7 +167,14 @@
 
             vmVideos = new Vue({
                 el: '#videoList',
-                data: { videos: availableVideos }
+                data: { videos: availableVideos },
+                methods: {
+                    show: function(event) {
+                        var value = event.target.value
+                        
+                        console.log(value)
+                    }
+                }
             });
 
             loadVideos();
