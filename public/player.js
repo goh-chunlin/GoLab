@@ -21,6 +21,24 @@ function loadVideos() {
                         railVisible: true
                     }
                 );
+
+                $('.btn-update-video-info').click(function(event) {
+                    event.stopPropagation(); 
+    
+                    var videoId = $(this).data('videoid');
+                    var videoTitle = $(this).data('videotitle');
+    
+                    showUpdateVideoInfoPopup(videoId, videoTitle);
+                });
+    
+                $('.btn-delete-video-info').click(function(event) {
+                    event.stopPropagation(); 
+    
+                    var videoId = $(this).data('videoid');
+                    var videoTitle = $(this).data('videotitle');
+    
+                    showDeleteVideoPopup(videoId, videoTitle);
+                });
             },
             error: function (e) {
 
@@ -168,13 +186,6 @@ function watchVideo() {
                     $('#hidVideoName').val(videoTitle);
                     $('#txtVideoURL').val('');
                     $('#btnAddToList').attr("disabled", false);
-
-                    $('#storedVideosList').slimScroll({
-                        height: '500px',
-                        size: '8px',
-                        alwaysVisible: true,
-                        railVisible: true
-                    });
                 }
             )
             .fail(

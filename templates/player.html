@@ -172,24 +172,6 @@
 
             loadVideos();
 
-            $('.btn-update-video-info').click(function(event) {
-                event.stopPropagation(); 
-
-                var videoId = $(this).data('videoid');
-                var videoTitle = $(this).data('videotitle');
-
-                showUpdateVideoInfoPopup(videoId, videoTitle);
-            });
-
-            $('.btn-delete-video-info').click(function(event) {
-                event.preventDefault(); 
-
-                var videoId = $(this).data('videoId');
-                var videoTitle = $(this).data('videoTitle');
-
-                showDeleteVideoPopup(videoId, videoTitle);
-            });
-
         });
     </script>
 </body>
