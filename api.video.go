@@ -24,13 +24,13 @@ func handleVideoAPIRequests(video models.IVideo) http.HandlerFunc {
 
 		switch request.Method {
 		case "GET":
-			err = handleVideoAPIGet(writer, request, video)
+			err = handleVideoAPIGet(writer, request, video, user)
 		case "POST":
-			err = handleVideoAPIPost(writer, request, video)
+			err = handleVideoAPIPost(writer, request, video, user)
 		case "PUT":
-			err = handleVideoAPIPut(writer, request, video)
+			err = handleVideoAPIPut(writer, request, video, user)
 		case "DELETE":
-			err = handleVideoAPIDelete(writer, request, video)
+			err = handleVideoAPIDelete(writer, request, video, user)
 		}
 
 		if err != nil {
@@ -40,7 +40,7 @@ func handleVideoAPIRequests(video models.IVideo) http.HandlerFunc {
 	}
 }
 
-func handleVideoAPIGet(writer http.ResponseWriter, request *http.Request, video models.IVideo) (err error) {
+func handleVideoAPIGet(writer http.ResponseWriter, request *http.Request, video models.IVideo, user *Profile) (err error) {
 
 	videoIDURL := path.Base(request.URL.Path)
 
@@ -80,7 +80,7 @@ func handleVideoAPIGet(writer http.ResponseWriter, request *http.Request, video 
 	return
 }
 
-func handleVideoAPIPost(writer http.ResponseWriter, request *http.Request, video models.IVideo) (err error) {
+func handleVideoAPIPost(writer http.ResponseWriter, request *http.Request, video models.IVideo, user *Profile) (err error) {
 
 	length := request.ContentLength
 	body := make([]byte, length)
@@ -123,7 +123,7 @@ func handleVideoAPIPost(writer http.ResponseWriter, request *http.Request, video
 	return
 }
 
-func handleVideoAPIPut(writer http.ResponseWriter, request *http.Request, video models.IVideo) (err error) {
+func handleVideoAPIPut(writer http.ResponseWriter, request *http.Request, video models.IVideo, user *Profile) (err error) {
 
 	videoIDURL := path.Base(request.URL.Path)
 
@@ -192,7 +192,7 @@ func handleVideoAPIPut(writer http.ResponseWriter, request *http.Request, video 
 	return
 }
 
-func handleVideoAPIDelete(writer http.ResponseWriter, request *http.Request, video models.IVideo) (err error) {
+func handleVideoAPIDelete(writer http.ResponseWriter, request *http.Request, video models.IVideo, user *Profile) (err error) {
 
 	videoIDURL := path.Base(request.URL.Path)
 
@@ -218,7 +218,6 @@ func handleVideoAPIDelete(writer http.ResponseWriter, request *http.Request, vid
 		writer.WriteHeader(400)
 		writer.Header().Set("Content-Type", "application/json")
 		writer.Write(output)
-
 	}
 
 	err = video.DeleteVideo()
