@@ -15,6 +15,13 @@ func handleVideoAPIRequests(video models.IVideo) http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		var err error
 
+		user := profileFromSession(request)
+		if user == nil {
+			err = errors.New("sorry, you are not authorized")
+			writer.WriteHeader(401)
+			return
+		}
+
 		switch request.Method {
 		case "GET":
 			err = handleVideoAPIGet(writer, request, video)
@@ -34,12 +41,6 @@ func handleVideoAPIRequests(video models.IVideo) http.HandlerFunc {
 }
 
 func handleVideoAPIGet(writer http.ResponseWriter, request *http.Request, video models.IVideo) (err error) {
-	user := profileFromSession(request)
-	if user == nil {
-		err = errors.New("sorry, you are not authorized")
-		writer.WriteHeader(401)
-		return
-	}
 
 	videoIDURL := path.Base(request.URL.Path)
 
@@ -80,13 +81,6 @@ func handleVideoAPIGet(writer http.ResponseWriter, request *http.Request, video 
 }
 
 func handleVideoAPIPost(writer http.ResponseWriter, request *http.Request, video models.IVideo) (err error) {
-	user := profileFromSession(request)
-	if user == nil {
-		err = errors.New("sorry, you are not authorized")
-		writer.WriteHeader(401)
-
-		return
-	}
 
 	length := request.ContentLength
 	body := make([]byte, length)
@@ -130,13 +124,6 @@ func handleVideoAPIPost(writer http.ResponseWriter, request *http.Request, video
 }
 
 func handleVideoAPIPut(writer http.ResponseWriter, request *http.Request, video models.IVideo) (err error) {
-	user := profileFromSession(request)
-	if user == nil {
-		err = errors.New("sorry, you are not authorized")
-		writer.WriteHeader(401)
-
-		return
-	}
 
 	videoIDURL := path.Base(request.URL.Path)
 
@@ -206,13 +193,6 @@ func handleVideoAPIPut(writer http.ResponseWriter, request *http.Request, video 
 }
 
 func handleVideoAPIDelete(writer http.ResponseWriter, request *http.Request, video models.IVideo) (err error) {
-	user := profileFromSession(request)
-	if user == nil {
-		err = errors.New("sorry, you are not authorized")
-		writer.WriteHeader(401)
-
-		return
-	}
 
 	videoIDURL := path.Base(request.URL.Path)
 
