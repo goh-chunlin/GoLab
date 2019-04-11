@@ -7,8 +7,6 @@
     <!-- Custom Theme files -->
     <link href="static/cinema-style.css" rel="stylesheet" type="text/css" media="all" />
     <!-- Custom Theme files -->
-    <script src="static/jquery.min.js"></script>
-    <!-- Custom Theme files -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google-site-verification" content="vf5jTfw-LUQG7-nm5iv4zKNzAIWW60ZTdJQSkGjDJBw" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -26,7 +24,7 @@
         <div class="menu">
             <ul>
                 <li>
-                    <a href="/player">
+                    <a class="active" href="/player">
                         <div class="video"><i class="videos"></i><i class="videos1"></i></div>
                     </a>
                 </li>
@@ -40,70 +38,69 @@
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <div class="reviews-section">
-                    <div class="col-md-9 reviews-grids">
+                <div class="container">
 
                         <div id="systemMessagePanel">
-
+                
                         </div>
-
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon">YouTube URL</span>
-                                <input id="txtVideoURL" type="text" class="form-control"
-                                    onkeydown="if (event.keyCode == 13) document.getElementById('btnViewVideo').click();">
-                                <span class="input-group-btn">
-                                    <button id="btnViewVideo" class="btn btn-primary" type="button"
-                                        onclick="watchVideo();">Submit</button>
-                                </span>
+                
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">YouTube URL</span>
+                                        <input id="txtVideoURL" type="text" class="form-control" onkeydown="if (event.keyCode == 13) document.getElementById('btnViewVideo').click();">
+                                        <span class="input-group-btn">
+                                            <button id="btnViewVideo" class="btn btn-primary" type="button" onclick="watchVideo();">Submit</button>
+                                        </span>
+                                    </div>
+                                </div>
+                
+                                <div class="videoWrapper">
+                                    <iframe id="ytplayer" width="730" height="445">
+                                    </iframe>
+                                </div>
+                
+                                <div style="margin-top: 10px; margin-bottom: 40px;">
+                
+                                    <input id="hidVideoID" name="hidVideoID" type="hidden" />
+                                    <input id="hidVideoName" name="hidVideoName" type="hidden" />
+                
+                                    <input id="btnAddToList" type="button" class="btn btn-primary btn-lg" value="Add to List" disabled="disabled"
+                                        onclick="addVideo();" />
+                
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                
+                
+                                <div id="storedVideosList">
+                                    <div id="videoList" class="list-group">
+                                        <span class="list-group-item active">My Videos</span>
+                                        <a v-for="video in videos" href="javascript:;" class="list-group-item" v-on:click="watchVideoGeneral(video.youtubeVideoId);">
+                                            <table>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width: 94px;">
+                                                            <img v-bind:src="'https://i.ytimg.com/vi/' + video.youtubeVideoId + '/default.jpg'"
+                                                                width="90px" v-bind:title="video.videoTitle" v-bind:alt="video.videoTitle" />
+                                                        </td>
+                                                        <td valign="top">
+                                                            <span style="font-weight: bold;">{{ video.videoTitle }}</span>
+                                                            <br />
+                                                            <a href="javascript:;" v-on:click.stop="showUpdateVideoInfoPopup(video.id, video.videoTitle)">EDIT</a>
+                                                            |
+                                                            <a href="javascript:;" v-on:click.stop="showDeleteVideoPopup(video.id, video.videoTitle)">DELETE</a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="videoWrapper">
-                            <iframe id="ytplayer" width="730" height="445">
-                            </iframe>
-                        </div>
-
-                        <div style="margin-top: 10px; margin-bottom: 40px;">
-
-                            <input id="hidVideoID" name="hidVideoID" type="hidden" />
-                            <input id="hidVideoName" name="hidVideoName" type="hidden" />
-
-                            <input id="btnAddToList" type="button" class="btn btn-primary btn-lg" value="Add to List"
-                                disabled="disabled" onclick="addVideo();" />
-
-                        </div>
-
                     </div>
-                    <div class="col-md-3 side-bar">
-
-                        <div class="entertainment">
-                            <h3>My Videos</h3>
-                            <ul v-for="video in videos">
-                                <li class="ent">
-                                    <a href="javascript:;" v-on:click="watchVideoGeneral(video.youtubeVideoId);">
-                                        <img v-bind:src="'https://i.ytimg.com/vi/' + video.youtubeVideoId + '/default.jpg'"
-                                            v-bind:title="video.videoTitle" v-bind:alt="video.videoTitle" />
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;" v-on:click="watchVideoGeneral(video.youtubeVideoId);">
-                                        {{ video.videoTitle }}
-                                    </a>
-                                    <br />
-                                    <a href="javascript:;"
-                                        v-on:click.stop="showUpdateVideoInfoPopup(video.id, video.videoTitle)">EDIT</a>
-                                    |
-                                    <a href="javascript:;"
-                                        v-on:click.stop="showDeleteVideoPopup(video.id, video.videoTitle)">DELETE</a>
-                                </li>
-                                <div class="clearfix"></div>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="clearfix"></div>
-                </div>
             </div>
             <div class="footer">
                 <h6>About This Project</h6>
