@@ -2,105 +2,121 @@
 <html lang="en">
 
 <head>
-    <title>YouTube RePlayer</title>
-
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>YouTube RePlayer | Chun Lin Projects</title>
+    <link href="static/bootstrap.min.css" rel='stylesheet' type='text/css' />
+    <!-- Custom Theme files -->
+    <link href="static/cinema-style.css" rel="stylesheet" type="text/css" media="all" />
+    <!-- Custom Theme files -->
+    <script src="static/jquery.min.js"></script>
+    <!-- Custom Theme files -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google-site-verification" content="vf5jTfw-LUQG7-nm5iv4zKNzAIWW60ZTdJQSkGjDJBw" />
-
-    <link rel="stylesheet" href="static/bootstrap.min.css" media="screen" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script
+        type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!--webfont-->
+    <link
+        href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+        rel='stylesheet' type='text/css'>
 </head>
 
 <body>
-    <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
-        <div class="container">
-            <a href="../player" class="navbar-brand">YouTube RePlayer</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-
-                <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://github.com/goh-chunlin/GoLab" target="_blank">Repo</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://goh-chunlin.github.io" target="_blank">About Chun Lin</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logout"><strong>Logout</strong></a>
-                    </li>
-                </ul>
-
-            </div>
+    <!-- header-section-starts -->
+    <div class="full">
+        <div class="menu">
+            <ul>
+                <li>
+                    <a href="/player">
+                        <div class="video"><i class="videos"></i><i class="videos1"></i></div>
+                    </a>
+                </li>
+            </ul>
         </div>
-    </div>
-
-
-    <div class="container" style="margin-top: 120px;">
-
-        <div id="systemMessagePanel">
-
-        </div>
-
-        <div class="row">
-            <div class="col-sm-8">
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon">YouTube URL</span>
-                        <input id="txtVideoURL" type="text" class="form-control" onkeydown="if (event.keyCode == 13) document.getElementById('btnViewVideo').click();">
-                        <span class="input-group-btn">
-                            <button id="btnViewVideo" class="btn btn-primary" type="button" onclick="watchVideo();">Submit</button>
-                        </span>
+        <div class="main">
+            <div class="single-content">
+                <div class="top-header">
+                    <div class="logo">
+                        <p>YouTube RePlayer</p>
                     </div>
+                    <div class="clearfix"></div>
                 </div>
+                <div class="reviews-section">
+                    <div class="col-md-9 reviews-grids">
 
-                <div class="videoWrapper">
-                    <iframe id="ytplayer" width="730" height="445">
-                    </iframe>
-                </div>
+                        <div id="systemMessagePanel">
 
-                <div style="margin-top: 10px; margin-bottom: 40px;">
+                        </div>
 
-                    <input id="hidVideoID" name="hidVideoID" type="hidden" />
-                    <input id="hidVideoName" name="hidVideoName" type="hidden" />
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">YouTube URL</span>
+                                <input id="txtVideoURL" type="text" class="form-control"
+                                    onkeydown="if (event.keyCode == 13) document.getElementById('btnViewVideo').click();">
+                                <span class="input-group-btn">
+                                    <button id="btnViewVideo" class="btn btn-primary" type="button"
+                                        onclick="watchVideo();">Submit</button>
+                                </span>
+                            </div>
+                        </div>
 
-                    <input id="btnAddToList" type="button" class="btn btn-primary btn-lg" value="Add to List" disabled="disabled"
-                        onclick="addVideo();" />
+                        <div class="videoWrapper">
+                            <iframe id="ytplayer" width="730" height="445">
+                            </iframe>
+                        </div>
 
+                        <div style="margin-top: 10px; margin-bottom: 40px;">
+
+                            <input id="hidVideoID" name="hidVideoID" type="hidden" />
+                            <input id="hidVideoName" name="hidVideoName" type="hidden" />
+
+                            <input id="btnAddToList" type="button" class="btn btn-primary btn-lg" value="Add to List"
+                                disabled="disabled" onclick="addVideo();" />
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-3 side-bar">
+
+                        <div class="entertainment">
+                            <h3>My Videos</h3>
+                            <ul v-for="video in videos">
+                                <li class="ent">
+                                    <a href="javascript:;" v-on:click="watchVideoGeneral(video.youtubeVideoId);">
+                                        <img v-bind:src="'https://i.ytimg.com/vi/' + video.youtubeVideoId + '/default.jpg'"
+                                            v-bind:title="video.videoTitle" v-bind:alt="video.videoTitle" />
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" v-on:click="watchVideoGeneral(video.youtubeVideoId);">
+                                        {{ video.videoTitle }}
+                                    </a>
+                                    <br />
+                                    <a href="javascript:;"
+                                        v-on:click.stop="showUpdateVideoInfoPopup(video.id, video.videoTitle)">EDIT</a>
+                                    |
+                                    <a href="javascript:;"
+                                        v-on:click.stop="showDeleteVideoPopup(video.id, video.videoTitle)">DELETE</a>
+                                </li>
+                                <div class="clearfix"></div>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
                 </div>
             </div>
-            <div class="col-sm-4">
-
-
-                <div id="storedVideosList">
-                    <div id="videoList" class="list-group">
-                        <span class="list-group-item active">My Videos</span>
-                        <a v-for="video in videos" href="javascript:;" class="list-group-item" v-on:click="watchVideoGeneral(video.youtubeVideoId);">
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td style="width: 94px;">
-                                            <img v-bind:src="'https://i.ytimg.com/vi/' + video.youtubeVideoId + '/default.jpg'"
-                                                width="90px" v-bind:title="video.videoTitle" v-bind:alt="video.videoTitle" />
-                                        </td>
-                                        <td valign="top">
-                                            <span style="font-weight: bold;">{{ video.videoTitle }}</span>
-                                            <br />
-                                            <a href="javascript:;" v-on:click.stop="showUpdateVideoInfoPopup(video.id, video.videoTitle)">EDIT</a>
-                                            |
-                                            <a href="javascript:;" v-on:click.stop="showDeleteVideoPopup(video.id, video.videoTitle)">DELETE</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </a>
-                    </div>
+            <div class="footer">
+                <h6>About This Project</h6>
+                <p class="claim">This is a small web application built with Go (Golang) to give you the experience of
+                    looping your YouTube videos.</p>
+                <a href="https://github.com/goh-chunlin/GoLab" target="_blank">GitHub Repo</a> | <a
+                    href="https://goh-chunlin.github.io" target="_blank">About Me</a>
+                <div class="copyright">
+                    <p>Template by <a href="http://w3layouts.com" target="_blank">W3layouts</a></p>
                 </div>
             </div>
         </div>
+        <div class="clearfix"></div>
     </div>
 
     <div id="modalUpdateVideoInfo" class="modal">
@@ -117,7 +133,8 @@
                     <div class="form-group row">
                         <label for="modalUpdateVideoInfoName" class="col-sm-2 col-form-label">Title</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control-plaintext" id="modalUpdateVideoInfoName" name="VideoName" />
+                            <input type="text" class="form-control-plaintext" id="modalUpdateVideoInfoName"
+                                name="VideoName" />
                         </div>
                     </div>
                 </div>
