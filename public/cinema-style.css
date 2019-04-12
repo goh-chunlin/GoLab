@@ -186,7 +186,6 @@ i.video1 {
 	top: 82px;
 	left: 5px;
 	z-index: 2;
-	color: #FFFFFF;
 }
 
 .menu ul li {
@@ -197,6 +196,9 @@ i.video1 {
 .menu ul li a {
 	padding: 12px 22px;
 	display: block;
+	color: #FFFFFF;
+	text-align: center;
+	font-size: 42px;
 }
 
 .menu ul li a.active {
