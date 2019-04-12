@@ -209,6 +209,11 @@ i.video1 {
 	background: #dfb636;
 }
 
+.menu ul li a div i {
+	width: 60px; 
+	height: 60px;
+}
+
 i.home {
 	width: 60px;
 	height: 60px;
