@@ -10,6 +10,7 @@ type IVideo interface {
 	GetVideo(userID string, id int) (err error)
 	GetAllVideos(userID string) (videos []Video, err error)
 	CreateVideo(userID string) (err error)
+	CreateVideoWithNameAndURL(userID string, Name string, URL string) (err error)
 	UpdateVideo(userID string) (err error)
 	DeleteVideo() (err error)
 }
@@ -66,18 +67,25 @@ func (video *Video) GetAllVideos(userID string) (videos []Video, err error) {
 
 // CreateVideo creates a new video record in the database
 func (video *Video) CreateVideo(userID string) (err error) {
-	if video.Name == "" {
+	err = video.CreateVideoWithNameAndURL(userID, video.Name, video.URL)
+
+	return
+}
+
+// CreateVideoWithNameAndURL is similar to CreateVideo but accepts Name and URL
+func (video *Video) CreateVideoWithNameAndURL(userID string, Name string, URL string) (err error) {
+	if Name == "" {
 		err = errors.New("the video name cannot be empty")
 
 		return
-	} else if video.URL == "" {
+	} else if URL == "" {
 		err = errors.New("the video URL cannot be empty")
 
 		return
 	}
 	sqlStatement := "INSERT INTO videos (name, url, created_at, created_by, updated_at, updated_by) VALUES ($1, $2, $3, $4, $3, $4);"
 
-	_, err = video.Db.Exec(sqlStatement, video.Name, video.URL, time.Now(), userID)
+	_, err = video.Db.Exec(sqlStatement, Name, URL, time.Now(), userID)
 
 	return
 }

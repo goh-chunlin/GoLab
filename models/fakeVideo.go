@@ -104,6 +104,23 @@ func (video *FakeVideo) CreateVideo(userID string) (err error) {
 	return
 }
 
+// CreateVideoWithNameAndURL is similar to CreateVideo but accepts Name and URL
+func (video *FakeVideo) CreateVideoWithNameAndURL(userID string, Name string, URL string) (err error) {
+	if Name == "" {
+		err = errors.New("the video name cannot be empty")
+
+		return
+	} else if URL == "" {
+		err = errors.New("the video URL cannot be empty")
+
+		return
+	}
+
+	err = nil
+
+	return
+}
+
 // UpdateVideo is to update an existing video record in the database
 func (video *FakeVideo) UpdateVideo(userID string) (err error) {
 	if video.Name == "" {
