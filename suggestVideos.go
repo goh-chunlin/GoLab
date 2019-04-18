@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 	"os"
 
@@ -11,13 +10,10 @@ import (
 
 func suggestVideos(video models.IVideo) http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		var err error
-
 		request.ParseForm()
 
 		user := profileFromSession(request)
 		if user == nil {
-			err = errors.New("sorry, you are not authorized")
 			writer.WriteHeader(401)
 			return
 		}
