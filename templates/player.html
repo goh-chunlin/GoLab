@@ -16,9 +16,9 @@
     <link
         href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
         rel='stylesheet' type='text/css'>
-    
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" 
-		integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 </head>
 
 <body>
@@ -48,67 +48,77 @@
                 </div>
                 <div class="container">
 
-                        <div id="systemMessagePanel">
-                
-                        </div>
-                
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">YouTube URL</span>
-                                        <input id="txtVideoURL" type="text" class="form-control" onkeydown="if (event.keyCode == 13) document.getElementById('btnViewVideo').click();">
-                                        <span class="input-group-btn">
-                                            <button id="btnViewVideo" class="btn btn-primary" type="button" onclick="watchVideo();">Submit</button>
-                                        </span>
-                                    </div>
-                                </div>
-                
-                                <div class="videoWrapper">
-                                    <iframe id="ytplayer" width="730" height="445">
-                                    </iframe>
-                                </div>
-                
-                                <div style="margin-top: 10px; margin-bottom: 40px;">
-                
-                                    <input id="hidVideoID" name="hidVideoID" type="hidden" />
-                                    <input id="hidVideoName" name="hidVideoName" type="hidden" />
-                
-                                    <input id="btnAddToList" type="button" class="btn btn-primary btn-lg" value="Add to List" disabled="disabled"
-                                        onclick="addVideo();" />
-                
+                    <div id="systemMessagePanel">
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">YouTube URL</span>
+                                    <input id="txtVideoURL" type="text" class="form-control"
+                                        onkeydown="if (event.keyCode == 13) document.getElementById('btnViewVideo').click();">
+                                    <span class="input-group-btn">
+                                        <button id="btnViewVideo" class="btn btn-primary" type="button"
+                                            onclick="watchVideo();">Submit</button>
+                                    </span>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                
-                
-                                <div id="storedVideosList">
-                                    <div id="videoList" class="list-group">
-                                        <span class="list-group-item active">My Videos</span>
-                                        <a v-for="video in videos" href="javascript:;" class="list-group-item" v-on:click="watchVideoGeneral(video.youtubeVideoId);">
-                                            <table>
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="width: 94px;">
-                                                            <img v-bind:src="'https://i.ytimg.com/vi/' + video.youtubeVideoId + '/default.jpg'"
-                                                                width="90px" v-bind:title="video.videoTitle" v-bind:alt="video.videoTitle" />
-                                                        </td>
-                                                        <td valign="top">
-                                                            <span style="font-weight: bold;">{{ video.videoTitle }}</span>
-                                                            <br />
-                                                            <a href="javascript:;" v-on:click.stop="showUpdateVideoInfoPopup(video.id, video.videoTitle)">EDIT</a>
-                                                            |
-                                                            <a href="javascript:;" v-on:click.stop="showDeleteVideoPopup(video.id, video.videoTitle)">DELETE</a>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </a>
-                                    </div>
+
+                            <div class="videoWrapper">
+                                <iframe id="ytplayer" width="730" height="445">
+                                </iframe>
+                            </div>
+
+                            <div style="margin-top: 10px; margin-bottom: 40px;">
+
+                                <input id="hidVideoID" name="hidVideoID" type="hidden" />
+                                <input id="hidVideoName" name="hidVideoName" type="hidden" />
+
+                                <input id="btnAddToList" type="button" class="btn btn-primary btn-lg"
+                                    value="Add to List" disabled="disabled" onclick="addVideo();" />
+
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+
+
+                            <div id="storedVideosList">
+                                <div id="videoList" class="list-group">
+                                    <span class="list-group-item active">My Videos</span>
+                                    <a v-for="video in videos" href="javascript:;" class="list-group-item"
+                                        v-on:click="watchVideoGeneral(video.youtubeVideoId);">
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="width: 94px;">
+                                                        <img v-bind:src="'https://i.ytimg.com/vi/' + video.youtubeVideoId + '/default.jpg'"
+                                                            width="90px" v-bind:title="video.videoTitle"
+                                                            v-bind:alt="video.videoTitle" />
+                                                    </td>
+                                                    <td valign="top">
+                                                        <span style="font-weight: bold;">{{ video.videoTitle }}</span>
+                                                        <br />
+                                                        <a href="javascript:;"
+                                                            v-on:click.stop="showUpdateVideoInfoPopup(video.id, video.videoTitle)">EDIT</a>
+                                                        |
+                                                        <a href="javascript:;"
+                                                            v-on:click.stop="showDeleteVideoPopup(video.id, video.videoTitle)">DELETE</a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </a>
                                 </div>
+                            </div>
+
+                            <div class="text-center">
+                                <a href="javascript:;" onclick="$('#modalSuggestVideos').modal('show');">Get suggestion for videos</a>
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
             <div class="footer">
                 <h6>About This Project</h6>
@@ -173,6 +183,76 @@
             </div>
         </div>
     </div>
+
+    <form>
+        <div id="modalSuggestVideos" class="modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Suggest Videos</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-info">
+                            Please pick at least one category from the list below to retrieve some recommended videos
+                            based on your choices.
+                        </p>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="checkbox">
+                                    <label>
+                                        <input class="music-type-checkbox" type="checkbox" data-music-type="anime" /> Anime
+                                        <input class="music-type-hidden" type="hidden" name="MusicType" />
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input class="music-type-checkbox" type="checkbox" data-music-type="chinese" /> Chinese
+                                        <input class="music-type-hidden" type="hidden" name="MusicType" />
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="checkbox">
+                                    <label>
+                                        <input class="music-type-checkbox" type="checkbox" data-music-type="classical music" /> Classical Music
+                                        <input class="music-type-hidden" type="hidden" name="MusicType" />
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input class="music-type-checkbox" type="checkbox" data-music-type="jazz" /> Jazz
+                                        <input class="music-type-hidden" type="hidden" name="MusicType" />
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="checkbox">
+                                    <label>
+                                        <input class="music-type-checkbox" type="checkbox" data-music-type="korean" /> Korean
+                                        <input class="music-type-hidden" type="hidden" name="MusicType" />
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input class="music-type-checkbox" type="checkbox" data-music-type="piano" /> Piano
+                                        <input class="music-type-hidden" type="hidden" name="MusicType" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" onclick="updateCheckboxValues();">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>

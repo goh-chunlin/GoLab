@@ -12,6 +12,10 @@ function loadVideos() {
             success: function (result) {
                 availableVideos = result;
                 vmVideos.videos = availableVideos;
+
+                if (availableVideos.length == 0) {
+                    $('#modalSuggestVideos').modal('show');
+                }
                 
                 $('#storedVideosList').slimScroll(
                     {
@@ -177,6 +181,19 @@ function watchVideo() {
                     $('#txtVideoURL').val('');
                 }
             );
+    }
+}
+
+function updateCheckboxValues() {
+    var availableMusicTypeCheckboxes = $('.music-type-checkbox');
+    var musicTypeHiddenValues = $('.music-type-hidden');
+
+    for(var i = 0; i < availableMusicTypeCheckboxes.length; i++) {
+        if (availableMusicTypeCheckboxes[i].checked) {
+            musicTypeHiddenValues[i].val($(availableMusicTypeCheckboxes[i]).data("music-type"));
+        } else {
+            musicTypeHiddenValues[i].val('');
+        }
     }
 }
 

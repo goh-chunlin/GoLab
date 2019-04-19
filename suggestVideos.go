@@ -18,7 +18,12 @@ func suggestVideos(video models.IVideo) http.HandlerFunc {
 			return
 		}
 
-		go retrieveSuggestedVideos("anime", video, user)
+		for i := 0; i < len(request.PostForm["MusicType"]); i++ {
+			if request.PostForm["MusicType"][i] != "" {
+				go retrieveSuggestedVideos(request.PostForm["MusicType"][i], video, user)
+			}
+		}
+
 	}
 }
 
