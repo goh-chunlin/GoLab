@@ -184,15 +184,15 @@ function watchVideo() {
     }
 }
 
-function updateCheckboxValues() {
+function updateMusicTypeCheckboxValues() {
     var availableMusicTypeCheckboxes = $('.music-type-checkbox');
     var musicTypeHiddenValues = $('.music-type-hidden');
 
     for(var i = 0; i < availableMusicTypeCheckboxes.length; i++) {
         if (availableMusicTypeCheckboxes[i].checked) {
-            musicTypeHiddenValues[i].val($(availableMusicTypeCheckboxes[i]).data("music-type"));
+            $(musicTypeHiddenValues[i]).val($(availableMusicTypeCheckboxes[i]).data("music-type"));
         } else {
-            musicTypeHiddenValues[i].val('');
+            $(musicTypeHiddenValues[i]).val('');
         }
     }
 }

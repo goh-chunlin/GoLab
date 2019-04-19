@@ -24,6 +24,8 @@ func suggestVideos(video models.IVideo) http.HandlerFunc {
 			}
 		}
 
+		http.Redirect(writer, request, "/player", http.StatusSeeOther)
+
 	}
 }
 
