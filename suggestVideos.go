@@ -62,7 +62,7 @@ func retrieveSuggestedVideos(area string, video models.IVideo, user *Profile) {
 	checkError(err)
 
 	for _, youtubeItem := range youtubeResponse.Items {
-		video.CreateVideoWithNameAndURL(user.ID, youtubeItem.Snippet.Title, "https://www.youtube.com/watch?v="+youtubeItem.ItemID.VideoID)
+		go video.CreateVideoWithNameAndURL(user.ID, youtubeItem.Snippet.Title, "https://www.youtube.com/watch?v="+youtubeItem.ItemID.VideoID)
 	}
 }
 
