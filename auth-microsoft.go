@@ -34,7 +34,7 @@ func handleLoginWithMicrosoftRequest(writer http.ResponseWriter, request *http.R
 			TokenURL: "https://login.microsoftonline.com/common/oauth2/token",
 		},
 	}
-	authCodeURL := config.AuthCodeURL(sessionID, oauth2.SetAuthURLParam("resource", "https://outlook.office.com"))
+	authCodeURL := config.AuthCodeURL(sessionID, oauth2.SetAuthURLParam("resource", "https://graph.microsoft.com/User.Read"))
 
 	http.Redirect(writer, request, authCodeURL, http.StatusFound)
 }
