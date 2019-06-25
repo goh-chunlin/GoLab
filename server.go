@@ -27,7 +27,7 @@ func main() {
 	mux.HandleFunc("/login", handleRequestWithLog(handleLoginRequest))
 	mux.HandleFunc("/logout", handleRequestWithLog(handleLogoutRequest))
 	mux.HandleFunc("/oauth2callback", handleRequestWithLog(oauthCallbackHandler))
-	mux.HandleFunc("/.well-known/microsoft-identity-association", handleRequestWithLog(microsoftPublisherDomain))
+	mux.HandleFunc("/.well-known/microsoft-identity-association.json", handleRequestWithLog(microsoftPublisherDomain))
 
 	mux.HandleFunc("/api/video/", handleRequestWithLog(handleVideoAPIRequests(&models.Video{Db: db})))
 
