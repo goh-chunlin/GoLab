@@ -5,6 +5,10 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"time"
+
+	"github.com/Microsoft/ApplicationInsights-Go/appinsights"
 
 	uuid "github.com/gofrs/uuid"
 	"github.com/goh-chunlin/GoLab/util"
@@ -97,6 +101,13 @@ func fetchProfileFromMicrosoftGraph(ctx context.Context, tok *oauth2.Token) (*Pr
 	var microsoftGraphProfile map[string]interface{}
 
 	data, _ := ioutil.ReadAll(resp.Body)
+
+	clientAppInsights := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
+
+	trace := appinsights.NewTraceTelemetry(string(data), appinsights.Information)
+	trace.Timestamp = time.Now()
+
+	clientAppInsights.Track(trace)
 
 	json.Unmarshal(data, &microsoftGraphProfile)
 
