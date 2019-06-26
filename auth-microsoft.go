@@ -16,6 +16,8 @@ import (
 	"golang.org/x/oauth2"
 )
 
+var OAuthMicrosoftGraphConfig *oauth2.Config
+
 func handleLoginWithMicrosoftRequest(writer http.ResponseWriter, request *http.Request) {
 	sessionID := uuid.Must(uuid.NewV4()).String()
 
@@ -33,7 +35,7 @@ func handleLoginWithMicrosoftRequest(writer http.ResponseWriter, request *http.R
 	// Use the session ID for the "state" parameter.
 	// This protects against CSRF (cross-site request forgery).
 	// See https://godoc.org/golang.org/x/oauth2#Config.AuthCodeURL for more detail.
-	config := &oauth2.Config{
+	OAuthMicrosoftGraphConfig := &oauth2.Config{
 		ClientID:     "332f4102-5c40-4f80-a70e-5023184125a1",
 		ClientSecret: "/-/3w3hNvu@sFOnuH2DqJYLFAnAh1C2n",
 		RedirectURL:  "https://golab002.azurewebsites.net/auth",
@@ -43,7 +45,7 @@ func handleLoginWithMicrosoftRequest(writer http.ResponseWriter, request *http.R
 			TokenURL: "https://login.microsoftonline.com/common/oauth2/token",
 		},
 	}
-	authCodeURL := config.AuthCodeURL(sessionID)
+	authCodeURL := OAuthMicrosoftGraphConfig.AuthCodeURL(sessionID)
 
 	http.Redirect(writer, request, authCodeURL, http.StatusFound)
 }
@@ -65,11 +67,11 @@ func oauthCallbackWithMicrosoftHandler(writer http.ResponseWriter, request *http
 	code := request.FormValue("code")
 
 	submission := &LoginSubmission{
-		ClientID:     OAuthConfig.ClientID,
-		ClientSecret: OAuthConfig.ClientSecret,
+		ClientID:     OAuthMicrosoftGraphConfig.ClientID,
+		ClientSecret: OAuthMicrosoftGraphConfig.ClientSecret,
 		GrandType:    "authorization_code",
 		Code:         code,
-		RedirectURI:  OAuthConfig.RedirectURL,
+		RedirectURI:  OAuthMicrosoftGraphConfig.RedirectURL,
 	}
 
 	submissionJSON, err := json.MarshalIndent(&submission, "", "\t")
@@ -77,7 +79,7 @@ func oauthCallbackWithMicrosoftHandler(writer http.ResponseWriter, request *http
 		util.CheckError(err)
 	}
 
-	req, err := http.NewRequest("POST", OAuthConfig.Endpoint.TokenURL, bytes.NewBuffer(submissionJSON))
+	req, err := http.NewRequest("POST", OAuthMicrosoftGraphConfig.Endpoint.TokenURL, bytes.NewBuffer(submissionJSON))
 	if err != nil {
 		util.CheckError(err)
 	}
