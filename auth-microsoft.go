@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"io/ioutil"
@@ -65,49 +64,17 @@ func oauthCallbackWithMicrosoftHandler(writer http.ResponseWriter, request *http
 	}
 
 	code := request.FormValue("code")
-
-	submission := &LoginSubmission{
-		ClientID:     OAuthMicrosoftGraphConfig.ClientID,
-		ClientSecret: OAuthMicrosoftGraphConfig.ClientSecret,
-		GrandType:    "authorization_code",
-		Code:         code,
-		RedirectURI:  OAuthMicrosoftGraphConfig.RedirectURL,
-	}
-
-	submissionJSON, err := json.MarshalIndent(&submission, "", "\t")
+	tok, err := OAuthMicrosoftGraphConfig.Exchange(context.Background(), code)
 	if err != nil {
-		util.CheckError(err)
-	}
-
-	req, err := http.NewRequest("POST", OAuthMicrosoftGraphConfig.Endpoint.TokenURL, bytes.NewBuffer(submissionJSON))
-	if err != nil {
-		util.CheckError(err)
-	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		util.CheckError(err)
-	}
-	defer resp.Body.Close()
-
-	var tok *oauth2.Token
-	body, _ := ioutil.ReadAll(resp.Body)
-	if err = json.Unmarshal(body, &tok); err != nil {
 		util.CheckError(err)
 	}
 
 	clientAppInsights := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
 
-	trace := appinsights.NewTraceTelemetry("Body: "+string(body), appinsights.Information)
+	trace := appinsights.NewTraceTelemetry("Access Token: "+tok.AccessToken, appinsights.Information)
 	trace.Timestamp = time.Now()
 
 	clientAppInsights.Track(trace)
-	// tok, err := OAuthConfig.Exchange(context.Background(), code)
-	// if err != nil {
-	// 	util.CheckError(err)
-	// }
 
 	session, err := SessionStore.New(request, defaultSessionID)
 	if err != nil {
@@ -133,7 +100,7 @@ func oauthCallbackWithMicrosoftHandler(writer http.ResponseWriter, request *http
 // fetchProfile retrieves the Microsoft profile of the user associated with the
 // provided OAuth token.
 func fetchProfileFromMicrosoftGraph(ctx context.Context, tok *oauth2.Token) (*Profile, error) {
-	client := oauth2.NewClient(ctx, OAuthConfig.TokenSource(ctx, tok))
+	client := oauth2.NewClient(ctx, OAuthMicrosoftGraphConfig.TokenSource(ctx, tok))
 	resp, err := client.Get("https://graph.microsoft.com/v1.0/users/me")
 	if err != nil {
 		return nil, err
@@ -158,18 +125,4 @@ func fetchProfileFromMicrosoftGraph(ctx context.Context, tok *oauth2.Token) (*Pr
 		DisplayName: microsoftGraphProfile["displayName"].(string),
 		ImageURL:    "",
 	}, nil
-}
-
-type LoginSubmission struct {
-	ClientID     string `json:"client_id"`
-	ClientSecret string `json:"client_secret"`
-	GrandType    string `json:"grand_type"`
-	Code         string `json:"code"`
-	RedirectURI  string `json:"redirect_uri"`
-}
-
-type Token struct {
-	AccessToken string `json:"access_token"`
-	TokenType   string `json:"token_type"`
-	ExpiresIn   int32  `json:"expires_in"`
 }
