@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 
 	uuid "github.com/gofrs/uuid"
@@ -98,7 +98,7 @@ func fetchProfileFromMicrosoftGraph(ctx context.Context, tok *oauth2.Token) (*Pr
 
 	data, _ := ioutil.ReadAll(resp.Body)
 
-	log.Println("Resp body: ", string(data))
+	json.Unmarshal(data, &microsoftGraphProfile)
 
 	return &Profile{
 		ID:          microsoftGraphProfile["id"].(string),
