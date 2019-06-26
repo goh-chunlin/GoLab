@@ -69,7 +69,7 @@ func oauthCallbackWithMicrosoftHandler(writer http.ResponseWriter, request *http
 
 	clientAppInsights := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
 
-	trace := appinsights.NewTraceTelemetry("Access Token: "+tok.AccessToken, appinsights.Information)
+	trace := appinsights.NewTraceTelemetry("Token: "+tok, appinsights.Information)
 	trace.Timestamp = time.Now()
 
 	clientAppInsights.Track(trace)
