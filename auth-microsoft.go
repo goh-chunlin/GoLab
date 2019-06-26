@@ -96,12 +96,12 @@ func oauthCallbackWithMicrosoftHandler(writer http.ResponseWriter, request *http
 		util.CheckError(err)
 	}
 
-	// clientAppInsights := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
+	clientAppInsights := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
 
-	// trace := appinsights.NewTraceTelemetry("Body: "+code, appinsights.Information)
-	// trace.Timestamp = time.Now()
+	trace := appinsights.NewTraceTelemetry("Body: "+string(body), appinsights.Information)
+	trace.Timestamp = time.Now()
 
-	// clientAppInsights.Track(trace)
+	clientAppInsights.Track(trace)
 	// tok, err := OAuthConfig.Exchange(context.Background(), code)
 	// if err != nil {
 	// 	util.CheckError(err)
