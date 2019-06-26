@@ -57,6 +57,8 @@ func oauthCallbackWithMicrosoftHandler(writer http.ResponseWriter, request *http
 		util.CheckError(err)
 	}
 
+	clientAppInsights := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
+
 	redirectURL, ok := oauthFlowSession.Values[oauthFlowRedirectKey].(string)
 	// Validate this callback request came from the app.
 	if !ok {
@@ -64,14 +66,16 @@ func oauthCallbackWithMicrosoftHandler(writer http.ResponseWriter, request *http
 	}
 
 	code := request.FormValue("code")
+	trace := appinsights.NewTraceTelemetry("Code: "+code, appinsights.Information)
+	trace.Timestamp = time.Now()
+
+	clientAppInsights.Track(trace)
 	tok, err := OAuthMicrosoftGraphConfig.Exchange(context.Background(), code)
 	if err != nil {
 		util.CheckError(err)
 	}
 
-	clientAppInsights := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
-
-	trace := appinsights.NewTraceTelemetry("Access Token: "+tok.AccessToken, appinsights.Information)
+	trace = appinsights.NewTraceTelemetry("Access Token: "+tok.AccessToken, appinsights.Information)
 	trace.Timestamp = time.Now()
 
 	clientAppInsights.Track(trace)
