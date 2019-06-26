@@ -1,6 +1,9 @@
 package main
 
 import (
+	"context"
+	"io/ioutil"
+	"log"
 	"net/http"
 
 	uuid "github.com/gofrs/uuid"
@@ -38,4 +41,68 @@ func handleLoginWithMicrosoftRequest(writer http.ResponseWriter, request *http.R
 		oauth2.AccessTypeOnline)
 
 	http.Redirect(writer, request, authCodeURL, http.StatusFound)
+}
+
+// oauthCallbackWithMicrosoftHandler completes the OAuth flow, retreives the user's profile
+// information from Microsoft Graph and stores it in a session.
+func oauthCallbackWithMicrosoftHandler(writer http.ResponseWriter, request *http.Request) {
+	oauthFlowSession, err := SessionStore.Get(request, request.FormValue("state"))
+	if err != nil {
+		util.CheckError(err)
+	}
+
+	redirectURL, ok := oauthFlowSession.Values[oauthFlowRedirectKey].(string)
+	// Validate this callback request came from the app.
+	if !ok {
+		util.CheckError(err)
+	}
+
+	code := request.FormValue("code")
+	tok, err := OAuthConfig.Exchange(context.Background(), code)
+	if err != nil {
+		util.CheckError(err)
+	}
+
+	session, err := SessionStore.New(request, defaultSessionID)
+	if err != nil {
+		util.CheckError(err)
+	}
+
+	ctx := context.Background()
+	profile, err := fetchProfileFromMicrosoftGraph(ctx, tok)
+	if err != nil {
+		util.CheckError(err)
+	}
+
+	session.Values[oauthTokenSessionKey] = tok
+	// Strip the profile to only the fields we need. Otherwise the struct is too big.
+	session.Values[googleProfileSessionKey] = profile
+	if err := session.Save(request, writer); err != nil {
+		util.CheckError(err)
+	}
+
+	http.Redirect(writer, request, redirectURL, http.StatusFound)
+}
+
+// fetchProfile retrieves the Microsoft profile of the user associated with the
+// provided OAuth token.
+func fetchProfileFromMicrosoftGraph(ctx context.Context, tok *oauth2.Token) (*Profile, error) {
+	client := oauth2.NewClient(ctx, OAuthConfig.TokenSource(ctx, tok))
+	resp, err := client.Get("https://graph.microsoft.com/v1.0/users/me")
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var microsoftGraphProfile map[string]interface{}
+
+	data, _ := ioutil.ReadAll(resp.Body)
+
+	log.Println("Resp body: ", string(data))
+
+	return &Profile{
+		ID:          microsoftGraphProfile["id"].(string),
+		DisplayName: microsoftGraphProfile["displayName"].(string),
+		ImageURL:    "",
+	}, nil
 }
