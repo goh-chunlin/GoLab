@@ -63,17 +63,17 @@ func oauthCallbackWithMicrosoftHandler(writer http.ResponseWriter, request *http
 	}
 
 	code := request.FormValue("code")
-
-	clientAppInsights := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
-
-	trace := appinsights.NewTraceTelemetry("Code: "+code, appinsights.Information)
-	trace.Timestamp = time.Now()
-
-	clientAppInsights.Track(trace)
 	tok, err := OAuthConfig.Exchange(context.Background(), code)
 	if err != nil {
 		util.CheckError(err)
 	}
+
+	clientAppInsights := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
+
+	trace := appinsights.NewTraceTelemetry("Token: "+tok.AccessToken, appinsights.Information)
+	trace.Timestamp = time.Now()
+
+	clientAppInsights.Track(trace)
 
 	session, err := SessionStore.New(request, defaultSessionID)
 	if err != nil {
