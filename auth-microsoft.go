@@ -38,8 +38,8 @@ func handleLoginWithMicrosoftRequest(writer http.ResponseWriter, request *http.R
 		RedirectURL:  "https://golab002.azurewebsites.net/auth",
 		Scopes:       []string{"https://graph.microsoft.com/User.Read"},
 		Endpoint: oauth2.Endpoint{
-			AuthURL:  "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
-			TokenURL: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+			AuthURL:  "https://login.microsoftonline.com/common/oauth2/authorize",
+			TokenURL: "https://login.microsoftonline.com/common/oauth2/token",
 		},
 	}
 	authCodeURL := config.AuthCodeURL(sessionID, oauth2.ApprovalForce,
@@ -67,13 +67,6 @@ func oauthCallbackWithMicrosoftHandler(writer http.ResponseWriter, request *http
 	if err != nil {
 		util.CheckError(err)
 	}
-
-	clientAppInsights := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
-
-	trace := appinsights.NewTraceTelemetry("Token: "+tok.AccessToken, appinsights.Information)
-	trace.Timestamp = time.Now()
-
-	clientAppInsights.Track(trace)
 
 	session, err := SessionStore.New(request, defaultSessionID)
 	if err != nil {
