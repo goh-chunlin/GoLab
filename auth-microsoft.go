@@ -51,13 +51,6 @@ func handleLoginWithMicrosoftRequest(writer http.ResponseWriter, request *http.R
 // oauthCallbackWithMicrosoftHandler completes the OAuth flow, retreives the user's profile
 // information from Microsoft Graph and stores it in a session.
 func oauthCallbackWithMicrosoftHandler(writer http.ResponseWriter, request *http.Request) {
-	clientAppInsights := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
-
-	trace := appinsights.NewTraceTelemetry("Step 1", appinsights.Information)
-	trace.Timestamp = time.Now()
-
-	clientAppInsights.Track(trace)
-
 	oauthFlowSession, err := SessionStore.Get(request, request.FormValue("state"))
 	if err != nil {
 		util.CheckError(err)
@@ -70,6 +63,13 @@ func oauthCallbackWithMicrosoftHandler(writer http.ResponseWriter, request *http
 	}
 
 	code := request.FormValue("code")
+
+	clientAppInsights := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
+
+	trace := appinsights.NewTraceTelemetry("Code: "+code, appinsights.Information)
+	trace.Timestamp = time.Now()
+
+	clientAppInsights.Track(trace)
 	tok, err := OAuthConfig.Exchange(context.Background(), code)
 	if err != nil {
 		util.CheckError(err)
