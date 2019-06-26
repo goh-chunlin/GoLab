@@ -37,8 +37,8 @@ func handleLoginWithMicrosoftRequest(writer http.ResponseWriter, request *http.R
 		ClientSecret: "/-/3w3hNvu@sFOnuH2DqJYLFAnAh1C2n",
 		RedirectURL:  "https://golab002.azurewebsites.net/auth",
 		Endpoint: oauth2.Endpoint{
-			AuthURL:  "https://login.microsoftonline.com/common/oauth2/authorize",
-			TokenURL: "https://login.microsoftonline.com/common/oauth2/token",
+			AuthURL:  "https://login.microsoftonline.com/e81a9266-7e9e-4414-9099-064d9e8d7e76/oauth2/authorize",
+			TokenURL: "https://login.microsoftonline.com/e81a9266-7e9e-4414-9099-064d9e8d7e76/oauth2/token",
 		},
 	}
 	authCodeURL := config.AuthCodeURL(sessionID, oauth2.ApprovalForce,
