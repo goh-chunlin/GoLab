@@ -36,6 +36,7 @@ func handleLoginWithMicrosoftRequest(writer http.ResponseWriter, request *http.R
 		ClientID:     "332f4102-5c40-4f80-a70e-5023184125a1",
 		ClientSecret: "/-/3w3hNvu@sFOnuH2DqJYLFAnAh1C2n",
 		RedirectURL:  "https://golab002.azurewebsites.net/auth",
+		Scopes:       []string{"https://graph.microsoft.com/User.Read"},
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
 			TokenURL: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
