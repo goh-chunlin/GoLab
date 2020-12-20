@@ -4,4 +4,4 @@
 
 My personal playground to try out Go + Azure web app development and deployment.
 
-Demo: [http://golab.chunlinprojects.com](http://golab.chunlinprojects.com)
+Project Blog Posts: [https://cuteprogramming.wordpress.com/2019/03/10/spring-2019-golang-self-learning/](https://cuteprogramming.wordpress.com/2019/03/10/spring-2019-golang-self-learning/)
